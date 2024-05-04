@@ -16,10 +16,10 @@ export default {
             {
                 test: /\.css$/,                         //Same but with css and be sure to add a css loader
                 exclude: /(node_modules|bower_components|public)/,
-                use: ["style-loader", "css-loader"]       //For tailwindcss you may use posscss loader
+                use: ["style-loader", "css-loader", "postcss-loader"]       //For tailwindcss you may use posscss loader
             },
             {
-                test: /\.(png|jpg|gif|ico)$/i,          // For files
+                test: /\.(png|jpg|gif|ico|svg)$/i,          // For files
                 exclude: /(node_modules|bower_components|public)/,
                 use: [
                     {
