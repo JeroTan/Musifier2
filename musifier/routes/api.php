@@ -19,5 +19,17 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::prefix('v1')->group(function(){
+    //Authentication
+    Route::middleware("guestSanctum")->group(function(){
+        Route::post('/login', fn()=>true);
+        Route::post('/signup', fn()=>true);
+        Route::post('/signupVerify', fn()=>true);
+        Route::post('/loginGoogle', fn()=>true);
+    });
+    Route::delete('/login', fn()=>true)->middleware("auth:sanctum");
+
+
+
+
 
 });
