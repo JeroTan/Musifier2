@@ -15,7 +15,7 @@ export default (props)=>{
 
     return <main className="relative min-h-screen flex flex-col bg-gray-800 text-slate-300">
         {navbar}
-my-backdrop
+
         {/* The body of the page */}
         <main className="relative grow">
             {children}

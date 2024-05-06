@@ -33,6 +33,10 @@ export function anyToArr(input, strSplitter = ","){
     return arrayResult;
 }
 
+export function capitalFirst(str){
+    return  str.length ? (str[0].toUpperCase()  + str.slice(1)) : "";
+}
+
 export function getRegex(input){
     if(typeof input === "object")
         return new RegExp(input);

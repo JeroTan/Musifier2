@@ -27,9 +27,9 @@ export default ()=>{
                     <h1 className="text-2xl font-semibold tracking-tighter pb-5 md:text-left text-center">Creator</h1>
                     <p className="text-justify font-light">
                     Learning a new instrument will be quite a long journey.  You start with the essentials  then later on, you practice and train what you've learned. At some point,{loadMore ?" we will come across music theory. Because of that there will be a time where we need to become mathematicians instead of musicians. What we need now is a tool that will aid our memory in grasping those concepts. Forget about paper and pencil, as Musifier, one of the tools that may help you in your musical journey. ":"... "} 
-                        <a href="#" className="underline underline-offset-2 font-normal" onClick={()=>{loadMoreSet(prev=>!prev)}}>
+                        <span className="underline underline-offset-2 font-normal cursor-pointer" onClick={()=>{loadMoreSet(prev=>!prev)}}>
                             Load {loadMore?'less':'more'}
-                        </a>
+                        </span>
                     </p>
                 </section>
 

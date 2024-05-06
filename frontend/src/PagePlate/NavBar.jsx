@@ -17,38 +17,45 @@ export default ()=>{
     //useState
     const [ openLink, openLinkSet ] = useState(false); //instrument, learn, join 
 
-    //Use Effect
+    //Data Structure
+    const instrumentItems = <>
+        <DropDownItem name="Electric Guitar" onClick={goTo("/inst/electricguitar")} />
+        <DropDownItem name="Piano" onClick={goTo("/inst/piano")} />
+        <small className="text-slate-400">Still in Beta</small>
+    </>
+    const learnItems = <>
+        <DropDownItem name="Essentials" onClick={goTo("/learn/introduction/essential")} />
+        <DropDownItem name="Fret Board" onClick={goTo("/learn/guitar/fretboard")} />
+        <DropDownItem name="Read Notes" onClick={goTo("/learn/introduction/readnotes")} />
+        <DropDownItem name="Learn Beats" onClick={goTo("/learn/introduction/learnbeats")} />
+        <DropDownItem name="View All" onClick={goTo("/learn")} />
+        <small className="text-slate-400">Still in Beta</small>
+    </>
+    const joinItems = <>
+        <DropDownItem name="Login" onClick={goTo("/login")} />
+        <DropDownItem name="Sign-up" onClick={goTo("/signup")} />
+    </>
+
+    //Use Effect For SideNav
     useEffect(()=>{
         globalCast({sideNav:"content", val:<>
            <div className=" flex flex-col gap-1 mt-5">
-                <div className={` basis-full p-2 rounded ${openLink=="instrument"?"bg-gray-800":"bg-gray-800/75"}`} 
-                    tabIndex={0} onClick={select("instrument")} onBlur={()=>openLinkSet(false)}>
-                    <NavLink open={openLink=="instrument"} name="Instruments" place="right" />
+                <div className={` basis-full p-2 rounded ${openLink=="instrument"?"bg-gray-800":"bg-gray-800/75"}`} tabIndex={0} onBlur={()=>openLinkSet(false)}>
+                    <NavLink open={openLink=="instrument"} name="Instruments" place="right" onClick={select("instrument")} />
                     <div className={`mt-6 ml-6 ${openLink!="instrument"&&"hidden"}`}>
-                        <DropDownItem name="Electric Guitar" />
-                        <DropDownItem name="Piano" />
-                        <small className="text-slate-400">Still in Beta</small>
+                        {instrumentItems}
                     </div>
                 </div>
-                <div className={` basis-full p-2 rounded ${openLink=="learn"?"bg-gray-800":"bg-gray-800/75"}`} 
-                    tabIndex={0} onClick={select("learn")} onBlur={()=>openLinkSet(false)}>
-                    <NavLink open={openLink=="learn"} name="Learn" place="right" />
+                <div className={` basis-full p-2 rounded ${openLink=="learn"?"bg-gray-800":"bg-gray-800/75"}`} tabIndex={0}  onBlur={()=>openLinkSet(false)}>
+                    <NavLink open={openLink=="learn"} name="Learn" place="right" onClick={select("learn")} />
                     <div className={`mt-6 ml-6 ${openLink!="learn"&&"hidden"}`}>
-                        <DropDownItem name="Essentials" />
-                        <DropDownItem name="Fret Board" />
-                        <DropDownItem name="Read Notes" />
-                        <DropDownItem name="Learn Beats" />
-                        <DropDownItem name="View All" />
-                        <small className="text-slate-400">Still in Beta</small>
+                        {learnItems}
                     </div>
                 </div>
-                <div className={` basis-full p-2 rounded ${openLink=="join"?"bg-gray-800":"bg-gray-800/75"}`} 
-                    tabIndex={0} onClick={select("join")} onBlur={()=>openLinkSet(false)}>
-                    <NavLink open={openLink=="join"} name="Join" place="right" />
+                <div className={` basis-full p-2 rounded ${openLink=="join"?"bg-gray-800":"bg-gray-800/75"}`} tabIndex={0} onBlur={()=>openLinkSet(false)}>
+                    <NavLink open={openLink=="join"} name="Join" place="right" onClick={select("join")} />
                     <div className={`mt-6 ml-6 ${openLink!="join"&&"hidden"}`}>
-                        <DropDownItem name="Login" />
-                        <DropDownItem name="Sign-up" />
-                        <small className="text-slate-400">Still in Beta</small>
+                        {joinItems}
                     </div>
                 </div>
            </div>
@@ -60,13 +67,16 @@ export default ()=>{
     function select(link){
         return (e)=>{
             if(openLink == link)
-                navigate("/");
+                navigate("/"+link);
             openLinkSet(link);
         }
     }
 
     function openSideNav(){
         globalCast({sideNav:"open"});
+    }
+    function goTo(link){
+        return ()=>navigate(link);
     }
 
 
@@ -78,39 +88,33 @@ export default ()=>{
                     <img src={logoDarkMode} alt="Homepage Brand Image" className="my-img"  />
                 </div>
             </Link>
-            <div className="relative sm:block hidden" tabIndex={0} onClick={select("instrument")} onBlur={()=>openLinkSet(false)}>
+            <div className="relative sm:block hidden" tabIndex={0} onBlur={()=>openLinkSet(false)}>
                 <DropDown open={openLink=="instrument"}>
-                    <DropDownItem name="Electric Guitar" />
-                    <DropDownItem name="Piano" />
-                    <small className="text-slate-400">Still in Beta</small>
+                    {instrumentItems}
                 </DropDown>
-                <NavLink open={openLink=="instrument"} name="Instruments" />
+                <NavLink open={openLink=="instrument"} name="Instruments" onClick={select("instrument")} />
             </div>
-            <div className="relative sm:block hidden" tabIndex={0} onClick={select("learn")} onBlur={()=>openLinkSet(false)}>
+            <div className="relative sm:block hidden" tabIndex={0} onBlur={()=>openLinkSet(false)}>
                 <DropDown open={openLink=="learn"}>
-                    <DropDownItem name="Essentials" />
-                    <DropDownItem name="Fret Board" />
-                    <DropDownItem name="Read Notes" />
-                    <DropDownItem name="Learn Beats" />
-                    <DropDownItem name="View All" />
-                    <small className="text-slate-400">Still in Beta</small>
+                    {learnItems}
                 </DropDown>
-                <NavLink open={openLink=="learn"} name="Learn" />
+                <NavLink open={openLink=="learn"} name="Learn" onClick={select("learn")} />
             </div>
-            <div className="relative sm:block hidden" tabIndex={0} onClick={select("join")} onBlur={()=>openLinkSet(false)}>
+            <div className="relative sm:block hidden" tabIndex={0} onBlur={()=>openLinkSet(false)}>
                 <DropDown open={openLink=="join"}>
-                    <DropDownItem name="Login" />
-                    <DropDownItem name="Sign-up" />
+                    {joinItems}
                 </DropDown>
-                <NavLink open={openLink=="join"} name="Join" />
+                <NavLink open={openLink=="join"} name="Join" onClick={select("join")} />
             </div>
-            <div className=" sm:hidden ml-auto" tabIndex={0} onClick={openSideNav}>
+            <div className=" sm:hidden ml-auto" onClick={openSideNav}>
                 <Icon name="hamburgerMenu" outClass="h-10 w-10" inClass="fill-slate-300" />
             </div>
         </nav>
     </header>
 }
 
+
+//Components
 function NavLink(props){
     const {open, name, place, className, onClick} = props;
     const icon = <Icon name={open?"up":"down"} outClass="h-6 w-6" inClass="fill-slate-500"  />;
