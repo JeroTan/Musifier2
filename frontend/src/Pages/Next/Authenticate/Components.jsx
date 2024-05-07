@@ -65,7 +65,7 @@ export function InputBox(props){
     return <>
         <div className={` ${outClass || "flex flex-wrap mb-2"} `}>
             <label htmlFor={fieldName} className=" font-semibold">{displayName}</label>
-            <input id={fieldName} className={` my-textbox ${className} ${error && "my-errorbox"}`} value={inputState} onInput={onInputRevise} {...attributes} />
+            <input id={fieldName} name={fieldName} className={` my-textbox ${className} ${error && "my-errorbox"}`} value={inputState} onInput={onInputRevise} {...attributes} />
             <small className="my-infotext text-red-400">{error}</small>
             {children}
         </div>

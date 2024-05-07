@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('account', function (Blueprint $table) {
             $table->id();
             $table->string('username')->unique();
+            $table->string('email')->unique();
             $table->string('password');
             $table->string("googleLogin");
             $table->timestamps();
