@@ -3,6 +3,7 @@ import band_practice from "../../images/authenticate/band_practice.jpg";
 import { Form, InputBox, MainPage } from "./Components";
 import { useState } from "react";
 import { ApiVerifySignupData } from "../../Utilities/Api";
+import { Data, Error, objToString } from "../../helpers/ParseArgument";
 
 export default ()=>{
 
@@ -25,36 +26,28 @@ function ThisForm(){
     }
     const [ value, valueSet] = useState(fields);
     const [ error, errorSet ] = useState(fields);
+    const val = new Data(valueSet);
+    const err = new Error(errorSet);
 
     //Functionality
-    function verifyData(e, state, set){
+    function verifyData(e){ //Since this is the Input component
         const { name, value } = e.target;
-        set(value);
-        valueSet(prev=>{
-            const refPrev = structuredClone(prev);
-            refPrev[name] = value;
-            return refPrev;
-        });
+        val.store(name, value);
         ApiVerifySignupData({[name]:value}).then(({status, data})=>{
             if(status == 422){
-                errorSetter(name, data.errors[name]);
+                err.store(name, objToString(data.errors[name]));
             }else if(status == 200){
-                errorSetter(name, "");
+                err.store(name, "");
             }
         }).catch(x=>true);
     }
-    function errorSetter(name, value){
-        errorSet(prev=>{
-            const refPrev = structuredClone(prev);
-            const message = typeof value === "object" ? value.join(" ") : value;
-            refPrev[name] = message;
-            return refPrev
-        })
+    function submit(e){
+
     }
 
 
-    return <Form >
-        <h3 className=" my-title text-sky-300 mt-6">Signup</h3>
+    return <Form onSubmit={submit}>
+        <h3 className=" my-title text-sky-300 mt-4 mb-1">Signup</h3>
         <small className="my-subtext block text-slate-400">Already have an account? <Link className="text-sky-300" to={"/signup"}>Login</Link> it now.</small>
         <div className="my-6"></div>
 
@@ -64,6 +57,11 @@ function ThisForm(){
         <InputBox fieldName="confirmPassword" displayName="Confirm Password" type="password" onInput={verifyData} error={error.confirmPassword} />
 
         <div className="my-6"></div>
+        <div className=" flex justify-center">
+            <button type="submit" className=" my-btn-blue px-3 py-2 ">Create Account</button>
+        </div>
+        <div className="my-3"></div>
+
 
     </Form>
 }
