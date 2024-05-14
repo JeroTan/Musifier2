@@ -81,7 +81,7 @@ export default ()=>{
 
 
     return <header className="fixed z-10 w-full bg-gray-900 after:absolute after:h-[0.1rem] after:w-full after:bg-gradient-to-r after:from-sky-400 after:to-blue-500 after:drop-shadow-lg">
-        <nav className=" my-5 flex gap-8 sm:justify-center items-center px-5">
+        <nav className=" my-4 flex gap-8 sm:justify-center items-center px-5">
             {/*Logo Container*/}
             <Link to={"/"}>
                 <div className="relative w-32 h-auto">
@@ -121,7 +121,7 @@ function NavLink(props){
 
     return <div className={`flex items-center cursor-pointer ${className}`} onClick={onClick}>
         { place=="right"?icon:"" }
-        <span className="text-xl font-semibold tracking-wide">{name}</span>
+        <span className=" my-text-big">{name}</span>
         { place!="right"?icon:"" }
     </div>
 }
@@ -142,7 +142,7 @@ function DropDownItem(props){
     return <>
         <div className="group cursor-pointer flex flex-row mb-2" {...attributes}>
             <div className={` group-hover:bg-sky-500 bg-blue-900 w-1 h-[5px]"`}></div>
-            <div className="ml-1 break-keep" style={{whiteSpace:"nowrap"}}>{name}</div>
+            <div className="ml-1 break-keep my-text" style={{whiteSpace:"nowrap"}}>{name}</div>
         </div>
     </>
 }

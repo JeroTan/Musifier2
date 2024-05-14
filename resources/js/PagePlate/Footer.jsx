@@ -24,8 +24,8 @@ export default ()=>{
 
                 </section>
                 <section className="flex-1 basis-full mr-auto">
-                    <h1 className="text-2xl font-semibold tracking-tighter pb-5 md:text-left text-center">Creator</h1>
-                    <p className="text-justify font-light">
+                    <h1 className="my-text-big mb-4 md:text-left text-center">Creator</h1>
+                    <p className="text-justify my-subtext">
                     Learning a new instrument will be quite a long journey.  You start with the essentials  then later on, you practice and train what you've learned. At some point,{loadMore ?" we will come across music theory. Because of that there will be a time where we need to become mathematicians instead of musicians. What we need now is a tool that will aid our memory in grasping those concepts. Forget about paper and pencil, as Musifier, one of the tools that may help you in your musical journey. ":"... "}
                         <span className="underline underline-offset-2 font-normal cursor-pointer" onClick={()=>{loadMoreSet(prev=>!prev)}}>
                             Load {loadMore?'less':'more'}
@@ -34,7 +34,7 @@ export default ()=>{
                 </section>
 
                 <section className="flex-0 md:basis-auto basis-full">
-                    <h1 className="text-2xl font-semibold tracking-tighter pb-5 md:text-start text-center">Socials</h1>
+                    <h1 className="my-text-big mb-4 md:text-start text-center">Socials</h1>
                     <div className="flex gap-5 md:justify-start justify-center">
                         <Icon name="facebook" inClass=" fill-gray-800" outClass=" w-8 h-8 p-1 my-btn"
                             onClick={openLinkCallback('https://www.fb.com/mekaniRxON')}
@@ -51,7 +51,7 @@ export default ()=>{
 
 
             <section className="w-full">
-                <small className="block text-center text-xs text-slate-500">&#169;OnlyMeChanics 2024</small>
+                <p className="my-infotext text-center text-slate-500">&#169;OnlyMeChanics 2024</p>
             </section>
 
         </main>
@@ -59,3 +59,7 @@ export default ()=>{
 
     </footer>
 }
+
+
+
+

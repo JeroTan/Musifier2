@@ -12,22 +12,39 @@
     backdrop-filter: blur(5px) brightness(.5) contrast(.95)!important;
     -webkit-backdrop-filter: blur(5px) brightness(.5) contrast(.95)!important;
 }
+
+
+/*TEXT */
+.my-header{
+    @apply md:text-7xl sm:text-6xl text-5xl font-bold pb-2 tracking-tight;
+}
+.my-header-flat{
+    @apply sm:text-6xl text-5xl font-extralight pb-2 tracking-wide;
+}
+.my-title-big{
+    @apply sm:text-4xl text-3xl font-bold tracking-wide
+}
+.my-title{
+    @apply sm:text-4xl text-3xl font-semibold tracking-tight
+}
 .my-semi-title{
     @apply text-3xl font-semibold tracking-tight
 }
-.my-title{
-    @apply text-4xl font-semibold tracking-tight
+.my-text-big{
+    @apply sm:text-xl text-lg font-semibold tracking-wide
 }
 .my-text{
     @apply text-lg font-light tracking-wide
 }
 .my-subtext{
-    @apply text-sm font-light tracking-wide
+    @apply text-sm font-light tracking-wider
 }
 .my-infotext{
-    @apply text-xs font-light tracking-wide
+    @apply text-xs font-light tracking-wider
 }
 
+
+/* FORM */
 .my-textbox{
     @apply relative basis-full rounded bg-gray-400 focus:bg-gray-200 hover:bg-gray-200 focus:outline-none px-2 py-1 text-gray-900 focus:text-gray-800 hover:text-gray-800 delay-75 ;
 }

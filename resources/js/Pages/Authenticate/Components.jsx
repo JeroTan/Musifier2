@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
-import { capitalFirst, propertyExclusion } from "../../../helpers/ParseArgument";
-import PagePlate from "../../../PagePlate/PagePlate";
-import logoDarkMode from "../../../images/logo/Musifier_Logo_Dark.svg";
+import { capitalFirst, propertyExclusion } from "../../helpers/ParseArgument";
+import PagePlate from "../../PagePlate/PagePlate";
+import logoDarkMode from "../../images/logo/Musifier_Logo_Dark.svg";
 
 export default ()=>{
 
@@ -48,7 +48,7 @@ export function Form(props){
 }
 
 export function InputBox(props){
-    const {fieldName, error, className, children, onInput, outClass } = props;
+    const {fieldName, error, className, children, onInput, outClass } = props;//This class is non-attributes
     const displayName = props.displayName ?? capitalFirst(fieldName);
     const attributes = propertyExclusion(["fieldName", "error", "displayName", "id", "className", "children", "onInput", "key", "outClass"], props);
 

@@ -2,6 +2,7 @@
 export default {
   content: [
     "./resources/**/*.blade.php",
+    "./resources/js/**/*.jsx",
     "./resources/**/*.js",
     "./resources/**/*.jsx",
   ],

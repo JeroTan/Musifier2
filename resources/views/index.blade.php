@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="Keywords" content="Musifier;">
-    <link rel="icon" type="image/icon" href="fav.ico" />
+    <link rel="icon" type="image/icon" href="favicon.ico" />
     <title>Musifier</title>
     <!-- Google Sign-In -->
     <script src="https://apis.google.com/js/platform.js" async defer></script>

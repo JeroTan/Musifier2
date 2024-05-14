@@ -1,8 +1,8 @@
 import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom"
 import NotFound from "../Pages/ErrorPage/NotFound"
 import Homepage from "../Pages/Homepage"
-import Login from "../Pages/Next/Authenticate/Login"
-import Signup from "../Pages/Next/Authenticate/Signup"
+import Login from "../Pages/Authenticate/Login"
+import Signup from "../Pages/Authenticate/Signup"
 
 export default ()=>{
     return <BrowserRouter>
