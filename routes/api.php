@@ -21,13 +21,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('v1')->group(function(){
     //Authentication
-    Route::middleware("guestSanctum")->group(function(){
-        Route::post('/login', fn()=>true);
-        Route::post('/signup', fn()=>true);
-        Route::post('/signupVerify', [Authentication::class, "signupVerify"]);
-        Route::post('/loginGoogle', fn()=>true);
+    Route::controller(Authentication::class)->group(function(){
+        Route::middleware("guestSanctum")->group(function(){
+            Route::post('/login', "login");
+            Route::post('/signup', "signup");
+            Route::post('/signGoogle', "signWithGoogle");
+            //Data Verifier
+            Route::post('/signupVerify', "signupVerify");
+        });
+        Route::delete('/login', "logout")->middleware("auth:sanctum");
     });
-    Route::delete('/login', fn()=>true)->middleware("auth:sanctum");
+
+
 
 
 

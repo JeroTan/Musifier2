@@ -5,7 +5,7 @@ namespace App\Http\Requests\Api\V1\Authenticate;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
-class SignupVerify extends FormRequest
+class Signup extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +23,10 @@ class SignupVerify extends FormRequest
     public function rules(): array
     {
         $rules = [
-            "username" => "sometimes|required|max:32|regex:/^[a-zA-Z0-9\,\.\-\_\"\'\s]*$/|unique:account,username",
-            "email" => "sometimes|required|email:dns|unique:account,email",
-            "password" => ["sometimes", "required", Password::min(8)->max(256)->letters()->numbers()],
-            "confirmPassword" => "sometimes|required",
+            "username" => "required|max:32|regex:/^[a-zA-Z0-9\,\.\-\_\"\'\s]*$/|unique:account,username",
+            "email" => "required|email:dns|unique:account,email",
+            "password" => ["required", Password::min(8)->max(256)->letters()->numbers()],
+            "confirmPassword" => "required|same:password",
         ];
         return $rules;
     }
@@ -41,4 +41,5 @@ class SignupVerify extends FormRequest
             "confirmPassword.same"=>"Confirm Password does not match with your given password.",
         ];
     }
+
 }

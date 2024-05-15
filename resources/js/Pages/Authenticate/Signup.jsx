@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import band_practice from "../../images/authenticate/band_practice.jpg";
 import { Form, InputBox, MainPage } from "./Components";
 import { useState } from "react";
-import { ApiVerifySignupData } from "../../Utilities/Api";
-import { Data, Error, objToString } from "../../helpers/ParseArgument";
+import { ApiSignUp, ApiVerifySignupData, authToken } from "../../Utilities/Api";
+import { Data, Error, laravelValErrToStr, objToString } from "../../helpers/ParseArgument";
 
 export default ()=>{
 
@@ -16,6 +16,8 @@ export default ()=>{
 }
 
 function ThisForm(){
+    //global
+    const navigate = useNavigate();
 
     //FieldNaming
     const fields = {
@@ -30,7 +32,7 @@ function ThisForm(){
     const err = new Error(errorSet);
 
     //Functionality
-    function verifyData(e){ //Since this is the Input component
+    function verifyData(e){
         const { name, value } = e.target;
         val.store(name, value);
         ApiVerifySignupData({[name]:value}).s200(data=>{
@@ -40,7 +42,16 @@ function ThisForm(){
         })
     }
     function submit(e){
+        e.preventDefault();
 
+        ApiSignUp(value).s201(data=>{
+            const {message, token} = data;
+            authToken.store(token);
+            navigate('/');
+            alert(message);
+        }).s422(data=>{
+            err.batch( laravelValErrToStr(data.errors) );
+        });
     }
 
 
@@ -59,8 +70,6 @@ function ThisForm(){
             <button type="submit" className=" my-btn-blue px-3 py-2 ">Create Account</button>
         </div>
         <div className="my-3"></div>
-
-
     </Form>
 }
 
