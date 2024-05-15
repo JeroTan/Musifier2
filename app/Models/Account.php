@@ -4,16 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User;
 use Laravel\Sanctum\HasApiTokens;
 
-class Account extends Model
+class Account extends User
 {
     use HasApiTokens, HasFactory;
 
     protected $fillable = [
         'username',
         'password',
-        'googleLogin',
+        'email',
+        'emailVerifiedAt',
         'displayName',
     ];
 
@@ -29,6 +31,7 @@ class Account extends Model
 
     protected $casts = [
         'password'=>"hashed",
+        'emailVerifiedAt'=>"datetime",
     ];
 
     //Relationships

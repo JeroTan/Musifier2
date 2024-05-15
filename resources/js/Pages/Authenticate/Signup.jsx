@@ -33,13 +33,11 @@ function ThisForm(){
     function verifyData(e){ //Since this is the Input component
         const { name, value } = e.target;
         val.store(name, value);
-        ApiVerifySignupData({[name]:value}).then(({status, data})=>{
-            if(status == 422){
-                err.store(name, objToString(data.errors[name]));
-            }else if(status == 200){
-                err.store(name, "");
-            }
-        }).catch(x=>true);
+        ApiVerifySignupData({[name]:value}).s200(data=>{
+            err.store(name, "");
+        }).s422(data=>{
+            err.store(name, objToString(data.errors[name]));
+        })
     }
     function submit(e){
 
@@ -48,7 +46,7 @@ function ThisForm(){
 
     return <Form onSubmit={submit}>
         <h3 className=" my-title text-sky-300 mt-4 mb-1">Signup</h3>
-        <small className="my-subtext block text-slate-400">Already have an account? <Link className="text-sky-300" to={"/signup"}>Login</Link> it now.</small>
+        <small className="my-subtext block text-slate-400">Already have an account? <Link className="text-sky-300" to={"/login"}>Login</Link> it now.</small>
         <div className="my-6"></div>
 
         <InputBox fieldName="username" onInput={verifyData} error={error.username} />

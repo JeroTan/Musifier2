@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('note_list', function (Blueprint $table) {
             $table->id();
             $table->foreignId("recordId")->nullable()->constrained('record')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string("name");
-            $table->string("beat");
-            $table->string("stringNotes");
+            $table->string("name", 64);
+            $table->string("beat", 32);
+            $table->longText("stringNotes");
             $table->timestamps();
 
         });

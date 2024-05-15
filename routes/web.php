@@ -1,5 +1,7 @@
 <?php
 
+use App\Mail\V1\WelcomeVerifyEmail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
+//View Email
+Route::get('/test/mail', function(){
+
+    return "DONE!";
+});
 
 
 /* For Single Page Application */
