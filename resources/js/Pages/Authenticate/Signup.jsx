@@ -1,9 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import band_practice from "../../images/authenticate/band_practice.jpg";
 import { Form, InputBox, MainPage } from "./Components";
-import { useState } from "react";
-import { ApiSignUp, ApiVerifySignupData, authToken } from "../../Utilities/Api";
+import { useContext, useState } from "react";
+import { ApiRequestCSRF, ApiSignUp, ApiVerifySignupData, authToken } from "../../Utilities/Api";
 import { Data, Error, laravelValErrToStr, objToString } from "../../helpers/ParseArgument";
+import { Pop } from "../../helpers/Pop";
+import { GlobalStateContext } from "../../Utilities/GlobalState";
+import { Notif } from "../../helpers/Notif";
 
 export default ()=>{
 
@@ -18,6 +21,7 @@ export default ()=>{
 function ThisForm(){
     //global
     const navigate = useNavigate();
+    const [gState, gCast] = useContext(GlobalStateContext);
 
     //FieldNaming
     const fields = {
@@ -30,28 +34,43 @@ function ThisForm(){
     const [ error, errorSet ] = useState(fields);
     const val = new Data(valueSet);
     const err = new Error(errorSet);
+    const pop = new Pop(gCast);
+
 
     //Functionality
     function verifyData(e){
         const { name, value } = e.target;
         val.store(name, value);
-        ApiVerifySignupData({[name]:value}).s200(data=>{
-            err.store(name, "");
-        }).s422(data=>{
+        err.store(name, "");
+        ApiVerifySignupData({[name]:value}).s422(data=>{
             err.store(name, objToString(data.errors[name]));
         })
     }
     function submit(e){
         e.preventDefault();
+        pop.type("loading").title("Creating Your Account").message("Please wait for a while. . .").run();
+        ApiRequestCSRF().then(x=>{
+            ApiSignUp(value).s201(data=>{
+                const {message, token} = data;
+                authToken.store(token);
+                Notif.patch(gCast).new(message);
+                navigate('/');
+                pop.type("success").title("Account Created").message("Welcome to Musifier!").button(true, false).run();
+            }).s422(data=>{
+                pop.close().run();
+                err.batch( laravelValErrToStr(data.errors) );
+            }).sOthers(data=>{
+                pop.close().run();
+                let message = "Your account is not yet created. Something happened on our end. Please try again later.";
+                if(typeof data == "string")
+                    message = data;
+                Notif.patch(gCast).new(message);
+            });
+        }).catch(x=>{
+            pop.close().run();
+            Notif.patch(gCast).new(x);
+        })
 
-        ApiSignUp(value).s201(data=>{
-            const {message, token} = data;
-            authToken.store(token);
-            navigate('/');
-            alert(message);
-        }).s422(data=>{
-            err.batch( laravelValErrToStr(data.errors) );
-        });
     }
 
 

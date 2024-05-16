@@ -3,12 +3,12 @@ import { GlobalStateContext } from "../Utilities/GlobalState";
 import Icon from "../Utilities/Icon";
 
 export default (props)=>{
-    const [GlobalState, globalCast] = useContext(GlobalStateContext);
-    const { isOpen, content, full } = GlobalState.sideNav;
+    const [gState, gCast] = useContext(GlobalStateContext);
+    const { isOpen, content, full } = gState.sideNav;
 
     if(!isOpen)
         return "";
- 
+
     return <>
     <aside className={` z-50 fixed h-screen w-full my-backdrop`}>
         <main className={` p-5 ${full?"w-full":"w-96"} h-screen bg-gray-950 SlideFromRight ml-auto`} >
@@ -34,7 +34,7 @@ export const sideNavState = {
 export const sideNavDispatch = (state, action)=>{
     const refState = {...state};
     switch(action?.sideNav){
-        case "open": 
+        case "open":
             refState.isOpen = true;
         break;
         case "close":

@@ -23,7 +23,7 @@ class SignupVerify extends FormRequest
     public function rules(): array
     {
         $rules = [
-            "username" => "sometimes|required|max:32|regex:/^[a-zA-Z0-9\,\.\-\_\"\'\s]*$/|unique:account,username",
+            "username" => "sometimes|required|max:32|regex:/^[a-zA-Z0-9\,\.\-\_\"\']*$/|unique:account,username",
             "email" => "sometimes|required|email:dns|unique:account,email",
             "password" => ["sometimes", "required", Password::min(8)->max(256)->letters()->numbers()],
             "confirmPassword" => "sometimes|required",
@@ -35,7 +35,7 @@ class SignupVerify extends FormRequest
         return [
             "username.required" => "You forget to include your Username.",
             "useranem.max" => "Maximum Username length is 32.",
-            "username.regex" => "The only accepted characters are alphanumeric and the following special characters: ,.-_\"'",
+            "username.regex" => "The only accepted characters are alphanumeric, the following special characters: ,.-_\"' and contains no space.",
             "username.unique" => "The username is already taken.",
             "email.unique"=>"Email address is already used.",
             "confirmPassword.same"=>"Confirm Password does not match with your given password.",

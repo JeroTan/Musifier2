@@ -3,6 +3,8 @@ import ReactDOM from "react-dom/client";
 import './Utilities/React.css';
 import {GlobalState, GlobalStateContext } from "./Utilities/GlobalState";
 import Routing from "./PagePlate/Routing";
+import { PopComponent } from "./Utilities/ReactPop";
+import { NotifComponent } from "./Utilities/ReactNotif";
 
 ReactDOM.createRoot(document.getElementById("root")).render(<>
     <Application/>
@@ -14,6 +16,8 @@ function Application(){
     <React.StrictMode>
         <GlobalStateContext.Provider value={GlobalState()}>
             <Routing />
+            <NotifComponent />
+            <PopComponent />
         </GlobalStateContext.Provider>
     </React.StrictMode>
     </>

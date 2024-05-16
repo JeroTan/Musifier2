@@ -37,6 +37,9 @@
 .my-subtext{
     @apply text-sm font-light tracking-wider
 }
+.my-subtext-big{
+    @apply text-sm font-bold tracking-wider
+}
 .my-infotext{
     @apply text-xs font-light tracking-wider
 }
@@ -53,10 +56,27 @@
     @apply border-green-400 border-2;
 }
 .my-btn{
-    @apply cursor-pointer rounded-lg  hover:scale-105 bg-gray-300 hover:bg-gray-500 text-slate-800 font-semibold;
+    @apply cursor-pointer rounded-lg  hover:scale-105 bg-gray-300 hover:bg-gray-500 text-slate-800 font-semibold focus:outline-sky-100 focus:outline focus:outline-[1px];
 }
 .my-btn-blue{
-    @apply cursor-pointer rounded-lg  hover:scale-105 bg-sky-300 hover:bg-sky-400 text-slate-800 font-semibold;
+    @apply cursor-pointer rounded-lg  hover:scale-105 bg-sky-300 hover:bg-sky-400 text-slate-800 font-semibold focus:outline-sky-100 focus:outline focus:outline-[1px];
+}
+.my-btn-clear{
+    @apply cursor-pointer rounded-lg hover:scale-105 focus:outline-sky-100 focus:outline focus:outline-[1px];
+}
+
+
+/*Dialog & Pop-ups */
+.my-dialog::backdrop, .my-backdrop{
+    backdrop-filter: blur(5px) brightness(.4) contrast(.95)!important;
+    -webkit-backdrop-filter: blur(5px) brightness(.4) contrast(.95)!important;
+}
+
+.my-dialog{
+    overscroll-behavior: 'contain'!important;
+    animation: slide-in-top 0.1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    /*For Tailwind*/
+    @apply bg-gray-800 p-2 text-gray-200  outline-none rounded-md shadow shadow-gray-600/50;
 }
 
 
@@ -74,5 +94,29 @@
     100% {
         transform: translateX(0px);
         opacity: 1;
+    }
+}
+.a-slide-in-top {
+	animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+}
+@keyframes slide-in-top {
+    0% {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+.a-kuru-kuru {
+	animation: a-kuru-kuru 1s linear 0s infinite;
+}
+@keyframes a-kuru-kuru {
+    0% {
+        transform: rotate(0);
+    }
+    100% {
+        transform: rotate(360deg);
     }
 }

@@ -16,6 +16,6 @@
 <body>
     @viteReactRefresh
     @vite('resources/js/app.jsx')
-    <div class="" id="root"></div>
+    <div class="" id="root" style="position: relative"></div>
 </body>
 </html>

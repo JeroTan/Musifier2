@@ -29,7 +29,7 @@ Route::prefix('v1')->group(function(){
             //Data Verifier
             Route::post('/signupVerify', "signupVerify");
         });
-        Route::delete('/login', "logout")->middleware("auth:sanctum");
+        Route::delete('/logout', "logout")->middleware("auth:sanctum");
     });
 
 

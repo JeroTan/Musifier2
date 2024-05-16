@@ -7,60 +7,76 @@ import logoDarkMode from "../images/logo/Musifier_Logo_Dark.svg";
 import { Link, useNavigate } from "react-router-dom"
 import { propertyExclusion } from "../helpers/ParseArgument";
 import { GlobalStateContext } from "../Utilities/GlobalState";
+import { authToken } from "../Utilities/Api";
 
 
 export default ()=>{
     //Global
     const navigate = useNavigate();
-    const [ globalState, globalCast] = useContext(GlobalStateContext);
+    const [ gState, gCast] = useContext(GlobalStateContext);
+    const isAuthenticated = authToken.exist;
 
     //useState
     const [ openLink, openLinkSet ] = useState(false); //instrument, learn, join
 
     //Data Structure
     const instrumentItems = <>
-        <DropDownItem name="Electric Guitar" onClick={goTo("/inst/electricguitar")} />
-        <DropDownItem name="Piano" onClick={goTo("/inst/piano")} />
+        <DropDownItem name="Electric Guitar" to="/inst/electricguitar" />
+        <DropDownItem name="Piano" to="/inst/piano"/>
         <small className="text-slate-400">Still in Beta</small>
     </>
     const learnItems = <>
-        <DropDownItem name="Essentials" onClick={goTo("/learn/introduction/essential")} />
-        <DropDownItem name="Fret Board" onClick={goTo("/learn/guitar/fretboard")} />
-        <DropDownItem name="Read Notes" onClick={goTo("/learn/introduction/readnotes")} />
-        <DropDownItem name="Learn Beats" onClick={goTo("/learn/introduction/learnbeats")} />
-        <DropDownItem name="View All" onClick={goTo("/learn")} />
+        <DropDownItem name="Essentials" to="/learn/introduction/essential" />
+        <DropDownItem name="Fret Board" to="/learn/guitar/fretboard" />
+        <DropDownItem name="Read Notes" to="/learn/introduction/readnotes" />
+        <DropDownItem name="Learn Beats" to="/learn/introduction/learnbeats" />
+        <DropDownItem name="View All" to="/learn" />
         <small className="text-slate-400">Still in Beta</small>
     </>
     const joinItems = <>
-        <DropDownItem name="Login" onClick={goTo("/login")} />
-        <DropDownItem name="Sign-up" onClick={goTo("/signup")} />
+        <DropDownItem name="Login" to="/login" />
+        <DropDownItem name="Sign-up" to="/signup" />
+    </>
+    const profileItems = <>
+        <DropDownItem name="View" to="/profile" />
+        <DropDownItem name="Logout" to="/logout" />
     </>
 
     //Use Effect For SideNav
     useEffect(()=>{
-        globalCast({sideNav:"content", val:<>
+        gCast({sideNav:"content", val:<>
            <div className=" flex flex-col gap-1 mt-5">
-                <div className={` basis-full p-2 rounded ${openLink=="instrument"?"bg-gray-800":"bg-gray-800/75"}`} tabIndex={0} onBlur={()=>openLinkSet(false)}>
+                <div className={` basis-full p-2 rounded ${openLink=="instrument"?"bg-gray-800":"bg-gray-800/75"}`} tabIndex={0} onBlur={closeDropDownOnBlur}>
                     <NavLink open={openLink=="instrument"} name="Instruments" place="right" onClick={select("instrument")} />
                     <div className={`mt-6 ml-6 ${openLink!="instrument"&&"hidden"}`}>
                         {instrumentItems}
                     </div>
                 </div>
-                <div className={` basis-full p-2 rounded ${openLink=="learn"?"bg-gray-800":"bg-gray-800/75"}`} tabIndex={0}  onBlur={()=>openLinkSet(false)}>
+                <div className={` basis-full p-2 rounded ${openLink=="learn"?"bg-gray-800":"bg-gray-800/75"}`} tabIndex={0}  onBlur={closeDropDownOnBlur}>
                     <NavLink open={openLink=="learn"} name="Learn" place="right" onClick={select("learn")} />
                     <div className={`mt-6 ml-6 ${openLink!="learn"&&"hidden"}`}>
                         {learnItems}
                     </div>
                 </div>
-                <div className={` basis-full p-2 rounded ${openLink=="join"?"bg-gray-800":"bg-gray-800/75"}`} tabIndex={0} onBlur={()=>openLinkSet(false)}>
-                    <NavLink open={openLink=="join"} name="Join" place="right" onClick={select("join")} />
-                    <div className={`mt-6 ml-6 ${openLink!="join"&&"hidden"}`}>
-                        {joinItems}
+                {isAuthenticated()?<>
+                    <div className={` basis-full p-2 rounded ${openLink=="profile"?"bg-gray-800":"bg-gray-800/75"}`} tabIndex={0} onBlur={closeDropDownOnBlur}>
+                        <NavLink open={openLink=="profile"} name="Profile" place="right" onClick={select("profile")} />
+                        <div className={`mt-6 ml-6 ${openLink!="profile"&&"hidden"}`}>
+                            {profileItems}
+                        </div>
                     </div>
-                </div>
+                </>:<>
+                    <div className={` basis-full p-2 rounded ${openLink=="join"?"bg-gray-800":"bg-gray-800/75"}`} tabIndex={0} onBlur={closeDropDownOnBlur}>
+                        <NavLink open={openLink=="join"} name="Join" place="right" onClick={select("join")} />
+                        <div className={`mt-6 ml-6 ${openLink!="join"&&"hidden"}`}>
+                            {joinItems}
+                        </div>
+                    </div>
+                </>}
+
            </div>
         </>});
-        globalCast({sideNav:"full"});
+        gCast({sideNav:"full"});
     }, [openLink]);
 
     //Functionality
@@ -71,12 +87,17 @@ export default ()=>{
             openLinkSet(link);
         }
     }
-
-    function openSideNav(){
-        globalCast({sideNav:"open"});
+    function openSideNav(e){
+        gCast({sideNav:"open"});
     }
     function goTo(link){
         return ()=>navigate(link);
+    }
+    function closeDropDownOnBlur(e){
+        if(e.target.contains(e.relatedTarget))
+            return e.preventDefault();
+
+        openLinkSet(false);
     }
 
 
@@ -88,24 +109,34 @@ export default ()=>{
                     <img src={logoDarkMode} alt="Homepage Brand Image" className="my-img"  />
                 </div>
             </Link>
-            <div className="relative sm:block hidden" tabIndex={0} onBlur={()=>openLinkSet(false)}>
+            <div className="relative sm:block hidden" tabIndex={0} onBlur={closeDropDownOnBlur}>
                 <DropDown open={openLink=="instrument"}>
                     {instrumentItems}
                 </DropDown>
                 <NavLink open={openLink=="instrument"} name="Instruments" onClick={select("instrument")} />
             </div>
-            <div className="relative sm:block hidden" tabIndex={0} onBlur={()=>openLinkSet(false)}>
+            <div className="relative sm:block hidden" tabIndex={0} onBlur={closeDropDownOnBlur}>
                 <DropDown open={openLink=="learn"}>
                     {learnItems}
                 </DropDown>
                 <NavLink open={openLink=="learn"} name="Learn" onClick={select("learn")} />
             </div>
-            <div className="relative sm:block hidden" tabIndex={0} onBlur={()=>openLinkSet(false)}>
-                <DropDown open={openLink=="join"}>
-                    {joinItems}
-                </DropDown>
-                <NavLink open={openLink=="join"} name="Join" onClick={select("join")} />
-            </div>
+            {isAuthenticated()?<>
+                <div className="relative sm:block hidden" tabIndex={0} onBlur={closeDropDownOnBlur}>
+                    <DropDown open={openLink=="profile"}>
+                        {profileItems}
+                    </DropDown>
+                    <NavLink open={openLink=="profile"} name="Profile" onClick={select("profile")} />
+                </div>
+            </>:<>
+                <div className="relative sm:block hidden" tabIndex={0} onBlur={closeDropDownOnBlur}>
+                    <DropDown open={openLink=="join"}>
+                        {joinItems}
+                    </DropDown>
+                    <NavLink open={openLink=="join"} name="Join" onClick={select("join")} />
+                </div>
+            </>}
+
             <div className=" sm:hidden ml-auto" onClick={openSideNav}>
                 <Icon name="hamburgerMenu" outClass="h-10 w-10" inClass="fill-slate-300" />
             </div>
@@ -140,9 +171,9 @@ function DropDownItem(props){
     const {name} = props;
     const attributes = propertyExclusion(["name"], props);
     return <>
-        <div className="group cursor-pointer flex flex-row mb-2" {...attributes}>
+        <Link className="relative group cursor-pointer flex flex-row mb-2" {...attributes}>
             <div className={` group-hover:bg-sky-500 bg-blue-900 w-1 h-[5px]"`}></div>
             <div className="ml-1 break-keep my-text" style={{whiteSpace:"nowrap"}}>{name}</div>
-        </div>
+        </Link>
     </>
 }

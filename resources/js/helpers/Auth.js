@@ -54,3 +54,28 @@ export class AuthToken{
     }
 }
 
+export class CsrfToken{
+    store(token){
+        localStorage.setItem('csrf', token);
+    }
+    exist(){
+        if(localStorage.getItem('csrf') === null){
+            return false;
+        }
+        return true;
+
+    }
+    get(){
+        if(this.exist()){
+            return localStorage.getItem('csrf');
+        }
+        return "";
+
+    }
+    remove(){
+        if(localStorage.getItem('csrf') === null)
+            return false;
+
+        localStorage.removeItem('csrf');
+    }
+}

@@ -20,21 +20,25 @@ class Authentication extends Controller
         //Put it to database;
         $user = Account::create($request->only(['username', 'email', 'password']));
 
+        //Attempt to authenticate
+
+        $result = Auth::attempt($request->only(["username", "password"]));
+        Auth::guard("web")->login(Auth::user());
+
         //Queue Email for verification
         Mail::to($user->email)->queue( new WelcomeVerifyEmail($user->username, url("/")) );
 
         //create a token
-        $token = $user->createToken($user->username);
+        $token = $user->createToken($user->username)->plainTextToken;
 
         //Redirect With Verify Email and the token
-        return response()->json(["message"=>"Success! Email verification is needed.", "token"=>$token], 201);
+        return response()->json(["message"=>"We have sent an email to $user->email in order for us to verify your account.", "token"=>$token], 201);
     }
     public function signWithGoogle(){
 
     }
 
-    public function  verifyEmail(){//Verify the email here
-        //Query Param Check
+    public function  verifyEmail(Request $request){//Verify the email here
         //Check the hash
             //If invalid or expired then return a page that verification have expired
         //Get the id accounts details and update the emailVerifiedAt
@@ -48,7 +52,12 @@ class Authentication extends Controller
 
     //Others
     public function logout(Request $request){
-
+        $user = Auth::user();
+        if($user instanceof Account){
+            $user->tokens()->delete();
+        }
+        Auth::guard("web")->logout();
+        return response()->json("Logout Successfully", 201);
     }
 
 }
