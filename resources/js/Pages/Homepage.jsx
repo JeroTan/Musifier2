@@ -3,10 +3,10 @@ import PagePlate from "../PagePlate/PagePlate"
 import Icon from "../Utilities/Icon";
 
 //Images
-import instrument from "../images/homepage/instruments.jpg";
-import guitar from "../images/homepage/guitar.jpg";
-import headphone from "../images/homepage/headphone.jpg";
-import musifierLogo from "../images/logo/Musifier_Logo.svg";
+import instrument from "../../images/homepage/instruments.jpg";
+import guitar from "../../images/homepage/guitar.jpg";
+import headphone from "../../images/homepage/headphone.jpg";
+import musifierLogo from "../../images/logo/Musifier_Logo.svg";
 
 
 
@@ -56,14 +56,14 @@ export default ()=>{
                     {/*2nd Attachment*/}
                     <section className='md:mt-10 sm:mt-5 sm:block hidden'>
                         <p className='my-text text-justify'>
-                            Musifier is a web application that you can use to learn your favorite instruments. It also have the resource needed to learn music theory. One of its greatest feature is that you can learn and create musical scales that suits to your need. No need to be tech savvy, just use whatever suits you.
+                            Musifier is a web application that you can use to learn your favorite instruments. It also comes with other resources that you may need in learning music theory. One of its greatest feature is that you can learn and create musical scales that suits to your need. No need to be tech savvy, just click what sounds right to you.
                         </p>
                     </section>
                 </section>
                 {/*2nd Attachment*/}
                 <section className=' mt-2 sm:hidden block'>
                     <p className='my-text text-justify'>
-                        Musifier is a web application that you can use to learn your favorite instruments. It also have the resource needed to learn music theory. One of its greatest feature is that you can learn and create musical scales that suits to your need. No need to be tech savvy, just use whatever suits you.
+                        Musifier is a web application that you can use to learn your favorite instruments. It also comes with other resources that you may need in learning music theory. One of its greatest feature is that you can learn and create musical scales that suits to your need. No need to be tech savvy, just click what sounds right to you.
                     </p>
                 </section>
 
@@ -81,7 +81,7 @@ export default ()=>{
                 {/*2nd Attachment*/}
                 <section className='pt-10'>
                     <p className='my-text text-justify'>
-                        Having a hard time being acquainted with your fretboard? With Musifier, it can help you to familiarize your fretboard. It has a virtual fretboard that contains all notes of a standard 24 fret electric guitar. You can use the scale pattern to show what strings you should pick. You can try the built-in artificial intelligence helper to guess what scale the song you are playing and roam around the fretboard to determine the best location to play the notes.
+                        Having a hard time being acquainted with your fret-board? With Musifier, it can help you to familiarize your fret-board. It has a virtual fret-board that contains all notes of a standard 24 fret electric guitar. You can use the scale pattern to show what strings you should pick. You can try the built-in algorithm to guess what scale the song you are playing and roam around the fret-board to determine the best location to play the notes.
                     </p>
                 </section>
                 {/*3rd Attachment*/}

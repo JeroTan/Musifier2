@@ -1,7 +1,7 @@
 //images
 import { useContext, useEffect, useState } from "react";
 import Icon from "../Utilities/Icon";
-import logoDarkMode from "../images/logo/Musifier_Logo_Dark.svg";
+import logoDarkMode from "../../images/logo/Musifier_Logo_Dark.svg";
 
 //React
 import { Link, useNavigate } from "react-router-dom"

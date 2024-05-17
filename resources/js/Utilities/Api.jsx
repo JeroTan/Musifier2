@@ -32,13 +32,19 @@ export function ApiVerifySignupData(data){
 }
 
 export function ApiSignUp(data){
-    const apiRequest = api.reset().url('signup').data(data).post().withCredentials().request();
+    const apiRequest = api.reset().url('signup').data(data).post().request();
+    const resolver = new Resolve(apiRequest);
+    return resolver;
+}
+
+export function ApiLogIn(data){
+    const apiRequest = api.reset().url('login').data(data).post().request();
     const resolver = new Resolve(apiRequest);
     return resolver;
 }
 
 export function ApiLogOut(){
-    const apiRequest = api.reset().url('logout').auth().delete().withCredentials().withXSRFToken().request();
+    const apiRequest = api.reset().url('logout').auth().delete().request();
     const resolver = new Resolve(apiRequest);
     return resolver;
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Mail\V1\WelcomeVerifyEmail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
@@ -28,21 +29,35 @@ Route::get('/test/mail', function(){
  * For Single React App
  * Since it will return the same view, a helper function will shorten the code below while chaining will still be possible
  */
-function req(string $type, string $uri){
-    return Route::$type($uri, function(){
+function req(string $uri){
+    return Route::get($uri, function(){
         return view('index');
     });
 }
 
 //Homepage
-req("get", "/");
+req("/")->name("homepage");
+
 
 //Authentication
-req("get", "/signup");
-req("get", "/login");
+req("/signup");
+req("/login")->name('login');
+req("/join");
+// req("/logout");
+
 
 //Instruments
+req("/instrument");
+req("/instrument/{id}");
 
 
 
 //Learn
+
+
+
+//Fallback
+Route::fallback(function(){
+    return redirect()->route("homepage");
+
+});

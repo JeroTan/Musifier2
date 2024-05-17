@@ -63,7 +63,7 @@ export function PopComponent(){
             return;
         }
         backdropTriggerCallback(closeThisPop);
-    }, []);
+    }, [backdropTrigger]);
 
     return <>
         <dialog ref={dialogRef} className="my-dialog " style={{width: width}} onClick={dialogClick}>
@@ -98,7 +98,7 @@ export function PopComponent(){
                 </>}
                 {message&&<>
                     <div className="flex w-full justify-center mt-1">
-                        <p className={`my-text text-slate-400`}>{message}</p>
+                        <p className={`my-text text-slate-400 text-center`}>{message}</p>
                     </div>
                 </>}
 

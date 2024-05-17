@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { capitalFirst, propertyExclusion } from "../../helpers/ParseArgument";
 import PagePlate from "../../PagePlate/PagePlate";
-import logoDarkMode from "../../images/logo/Musifier_Logo_Dark.svg";
+import logoDarkMode from "../../../images/logo/Musifier_Logo_Dark.svg";
 import { Link, useNavigate } from "react-router-dom";
 
 export default ()=>{
@@ -39,7 +39,7 @@ export function Form(props){
     const attributes = propertyExclusion(["children"], props);
 
     return <>
-        <form className=" rounded-lg bg-gradient-to-r from-gray-800/25 to-gray-800 md:px-4 px-2 py-2  basis-96" {...attributes} >
+        <form className=" rounded-lg bg-gradient-to-r from-gray-800/25 to-gray-800 md:px-4 px-2 py-2  basis-96 a-slide-in-top" {...attributes} >
             {children}
         </form>
     </>
@@ -47,12 +47,15 @@ export function Form(props){
 
 export function LogoTag(){
     return <>
-        <Link className="w-full flex flex-col items-center justify-center cursor-pointer" to="/">
-            <div className="relative h-fit mt-5 hover:scale-105" style={{width: "9.3rem"}}>
-                <img src={logoDarkMode} alt="Musifier Logo" className=" my-img" />
-            </div>
-            <small className="my-subtext text-slate-400 ">Play the music you love</small>
-        </Link>
+        <div className="w-full flex justify-center" >
+            <Link className="flex flex-col justify-center items-center" to="/">
+                <div className="relative h-fit mt-5 hover:scale-105" style={{width: "9.3rem"}}>
+                    <img src={logoDarkMode} alt="Musifier Logo" className=" my-img" />
+                </div>
+                <small className="my-subtext text-slate-400 ">Play the music you love</small>
+            </Link>
+
+        </div>
     </>
 }
 

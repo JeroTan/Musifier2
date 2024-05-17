@@ -4,6 +4,7 @@ import Homepage from "../Pages/Homepage"
 import Login from "../Pages/Authenticate/Login"
 import Signup from "../Pages/Authenticate/Signup"
 import Logout from "../Pages/Authenticate/Logout"
+import { ListInstruments } from "../Pages/Instruments/Instruments"
 
 export default ()=>{
     return <BrowserRouter>
@@ -17,6 +18,12 @@ export default ()=>{
             <Route path="/join" element={<Signup />} />
             <Route path="/logout" element={<Logout />} />
 
+            {/* Instruments */}
+            <Route path="instrument" element={<ListInstruments />}>
+
+            </Route>
+
+            {/* Fallback */}
             <Route path="/*" element={<NotFound/>} />
         </Routes>
     </BrowserRouter>

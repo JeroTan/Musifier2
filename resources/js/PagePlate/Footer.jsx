@@ -4,7 +4,7 @@ import { openLinkCallback } from "../helpers/ParseArgument.js";
 //React
 import { useState } from "react";
 import Icon from "../Utilities/Icon";
-import Brand from "../images/ONLYMECHANICS.svg";
+import Brand from "../../images/Mekani.svg";
 
 
 export default ()=>{
@@ -24,9 +24,9 @@ export default ()=>{
 
                 </section>
                 <section className="flex-1 basis-full mr-auto">
-                    <h1 className="my-text-big mb-4 md:text-left text-center">Creator</h1>
+                    <h1 className="my-text-big mb-4 md:text-left text-center">Creator's Message</h1>
                     <p className="text-justify my-subtext">
-                    Learning a new instrument will be quite a long journey.  You start with the essentials  then later on, you practice and train what you've learned. At some point,{loadMore ?" we will come across music theory. Because of that there will be a time where we need to become mathematicians instead of musicians. What we need now is a tool that will aid our memory in grasping those concepts. Forget about paper and pencil, as Musifier, one of the tools that may help you in your musical journey. ":"... "}
+                    Learning a new instrument will be quite a long journey. We started with the essentials then later on, we put it into practice. But at some point, we will all come across music theory. {loadMore ?"  Because of music theory, there are times where we need to become mathematicians instead of musicians. What we need now is a tool that will aid our memory in grasping those concepts. Forget about paper and pencils, as Musifier, one of the tools out there that may help you in your musical journey. ":"... "}
                         <span className="underline underline-offset-2 font-normal cursor-pointer" onClick={()=>{loadMoreSet(prev=>!prev)}}>
                             Load {loadMore?'less':'more'}
                         </span>
@@ -51,7 +51,7 @@ export default ()=>{
 
 
             <section className="w-full">
-                <p className="my-infotext text-center text-slate-500">&#169;OnlyMeChanics 2024</p>
+                <p className="my-infotext text-center text-slate-500">&#169;Musifier x Mekani_Tekno 2024</p>
             </section>
 
         </main>
