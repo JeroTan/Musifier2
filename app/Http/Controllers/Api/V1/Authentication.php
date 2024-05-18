@@ -8,6 +8,7 @@ use App\Http\Requests\Api\V1\Authenticate\Signup;
 use App\Http\Requests\Api\V1\Authenticate\SignupVerify;
 use App\Mail\V1\WelcomeVerifyEmail;
 use App\Models\Account;
+use Google_Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -74,7 +75,18 @@ class Authentication extends Controller
 
     public function signWithGoogle(Request $request){
         //Define Google Client ID
-        dd($request->all());
+        //dd($request->all());
+        $clientId = env("GOOGLE_CLIENT_ID");
+        $google = new Google_Client(['client_id' => $clientId]);  // Specify the CLIENT_ID of the app that accesses the backend
+        $userData = $google->verifyIdToken($request->credential);
+        dd($userData);
+                // if ($payload) {
+                // $userid = $payload['sub'];
+                // // If the request specified a Google Workspace domain
+                // //$domain = $payload['hd'];
+                // } else {
+                // // Invalid ID token
+                // }
 
 
         //Verify Token
