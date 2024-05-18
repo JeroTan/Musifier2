@@ -1,6 +1,7 @@
 import { useContext } from "react"
 import { GlobalStateContext } from "../../Utilities/GlobalState"
 import { GoogleLogin } from "@react-oauth/google";
+import { ApiSignGoogle } from "../../Utilities/Api";
 
 export default (props)=>{
     //Global
@@ -8,7 +9,11 @@ export default (props)=>{
 
     //Functionality
     function success(credentials){
-        console.log(credentials);
+        ApiSignGoogle(credentials).s201(data=>{
+            console.log(data);
+        }).default(x=>{
+            console.log(x);
+        })
     }
     function error(){
 

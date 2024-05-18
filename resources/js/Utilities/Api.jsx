@@ -43,6 +43,12 @@ export function ApiLogIn(data){
     return resolver;
 }
 
+export function ApiSignGoogle(data){
+    const apiRequest = api.reset().url('signGoogle').data(data).post().request();
+    const resolver = new Resolve(apiRequest);
+    return resolver;
+}
+
 export function ApiLogOut(){
     const apiRequest = api.reset().url('logout').auth().delete().request();
     const resolver = new Resolve(apiRequest);

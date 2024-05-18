@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
+
 class Authentication extends Controller
 {
     public function login(Login $request){
@@ -70,8 +71,13 @@ class Authentication extends Controller
         //Redirect With Verify Email and the token
         return response()->json(["message"=>"We have sent an email to $user->email in order for us to verify your account.", "token"=>$token], 201);
     }
-    public function signWithGoogle(){
 
+    public function signWithGoogle(Request $request){
+        //Define Google Client ID
+        dd($request->all());
+
+
+        //Verify Token
     }
 
     public function  verifyEmail(Request $request){//Verify the email here
@@ -81,10 +87,14 @@ class Authentication extends Controller
         //Return a view that your account is verified visit the homepage here.
     }
 
+
+
     //Verifier
     public function signupVerify(SignupVerify $request){
         return response()->json("good", 200);
     }
+
+
 
     //Others
     public function logout(Request $request){
