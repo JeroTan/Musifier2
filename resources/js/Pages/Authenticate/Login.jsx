@@ -7,7 +7,7 @@ import { GlobalStateContext } from "../../Utilities/GlobalState";
 import { ApiLogIn, ApiRequestCSRF, authToken } from "../../Utilities/Api";
 import { Notif } from "../../helpers/Notif";
 import { Pop } from "../../helpers/Pop";
-import { HrLine } from "../Component";
+import { HrLine } from "../Components";
 import LoginWithGoogle from "./LoginWithGoogle";
 
 export default ()=>{

@@ -2,16 +2,23 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Helpers\Generator;
+use App\Helpers\Parser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Authenticate\Login;
 use App\Http\Requests\Api\V1\Authenticate\Signup;
 use App\Http\Requests\Api\V1\Authenticate\SignupVerify;
 use App\Mail\V1\WelcomeVerifyEmail;
 use App\Models\Account;
+use App\Models\AccountVerification;
+use Carbon\Carbon;
 use Google_Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Mail;
+
+
 
 
 class Authentication extends Controller
@@ -64,42 +71,69 @@ class Authentication extends Controller
         //session()->regenerate(); //Since this is an api
 
         //Queue Email for verification
-        Mail::to($user->email)->queue( new WelcomeVerifyEmail($user->username, url("/")) );
+        $verificationRecord = new AccountVerification;
+        $user->accountVerification()->associate($verificationRecord);
+        $verificationRecord->key = Crypt::encryptString($user->email);
+        $verificationRecord->purpose  = "email";
+        $verificationRecord->save();
+        Mail::to($user->email)->queue( new WelcomeVerifyEmail($user->username, url("/verifyEmail/?q=".$verificationRecord->key)) );
 
         //create a token
         $token = $user->createToken($user->username)->plainTextToken;
 
         //Redirect With Verify Email and the token
-        return response()->json(["message"=>"We have sent an email to $user->email in order for us to verify your account.", "token"=>$token], 201);
+        return response()->json(["notify"=>"We have sent an email to $user->email in order for us to verify your account.", "token"=>$token], 201);
     }
 
     public function signWithGoogle(Request $request){
+
         //Define Google Client ID
-        //dd($request->all());
         $clientId = env("GOOGLE_CLIENT_ID");
+
+        //Get the instance of Google Api Framework and insert the client Id
         $google = new Google_Client(['client_id' => $clientId]);  // Specify the CLIENT_ID of the app that accesses the backend
+
+        //Verify the Credentials of a user that login in with google
         $userData = $google->verifyIdToken($request->credential);
-        dd($userData);
-                // if ($payload) {
-                // $userid = $payload['sub'];
-                // // If the request specified a Google Workspace domain
-                // //$domain = $payload['hd'];
-                // } else {
-                // // Invalid ID token
-                // }
+
+            //Return a response if failed
+            if(!$userData)
+                return response()->json(["error"=>"Invalid Credentials"], 401);
+
+        //Check in the database if the email exist
+        $user = Account::where("email", $userData["email"])->first();
+
+        //Check whether user is already existed in the database;
+        if($user)
+            goto checkingEmail;
+
+            //And insert it here since it is not available
+            $user = new Account;
+            $user->username = Parser::noSpaces( substr($userData["name"], 0, 12) ).Generator::id();
+            $user->password = Generator::id(idLength: 12);
+            $user->email = $userData["email"];
+            $user->emailVerifiedAt = Carbon::now("Asia/Manila");
+            $user->picture = $userData["picture"]; //If accessing just check if it relative or absolute;
+            $user->displayName = $userData["name"];
+            $user->save();
+
+        checkingEmail:
+        //Check if userData email is verified
+        if(!$user->emailVerifiedAt){
+            $user->emailVerifiedAt = Carbon::now("Asia/Manila");
+            $user->save();
+        }
 
 
-        //Verify Token
+        //Authenticate it
+        Auth::attempt(["email"=>$user->email, "password"=>$user->password]);
+
+        //Make a token
+        $token = $user->createToken($user->username)->plainTextToken;
+
+        //Redirect With Verify Email and the token
+        return response()->json(["token"=>$token], 201);
     }
-
-    public function  verifyEmail(Request $request){//Verify the email here
-        //Check the hash
-            //If invalid or expired then return a page that verification have expired
-        //Get the id accounts details and update the emailVerifiedAt
-        //Return a view that your account is verified visit the homepage here.
-    }
-
-
 
     //Verifier
     public function signupVerify(SignupVerify $request){

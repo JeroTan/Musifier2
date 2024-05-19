@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\V1\Authentication;
+use App\Http\Controllers\Api\V1\Instrument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,10 +33,5 @@ Route::prefix('v1')->group(function(){
         Route::delete('/logout', "logout")->middleware("auth:sanctum");
     });
 
-
-
-
-
-
-
+    Route::middleware("auth:sanctum")->apiResource("instrument", Instrument::class);
 });

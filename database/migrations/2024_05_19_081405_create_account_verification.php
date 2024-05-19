@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('account', function (Blueprint $table) {
+        Schema::create('account_verification', function (Blueprint $table) {
             $table->id();
-            $table->string('username', 32)->unique();
-            $table->string('password', 512);
-            $table->string('email')->unique();
-            $table->dateTime('emailVerifiedAt')->nullable();
-            $table->string('displayName', 32)->nullable();
-            $table->string('picture')->nullable();
+            $table->foreignId("accountId")->constrained('account')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->longText("key");
+            $table->longText("purpose");
             $table->timestamps();
         });
     }
@@ -29,7 +26,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::disableForeignKeyConstraints();
-        Schema::dropIfExists('account');
+        Schema::dropIfExists('account_verification');
         Schema::enableForeignKeyConstraints();
     }
 };

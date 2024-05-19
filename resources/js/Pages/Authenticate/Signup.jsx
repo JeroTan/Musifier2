@@ -7,7 +7,7 @@ import { Data, Error, laravelValErrToStr, objToString } from "../../helpers/Pars
 import { Pop } from "../../helpers/Pop";
 import { GlobalStateContext } from "../../Utilities/GlobalState";
 import { Notif } from "../../helpers/Notif";
-import { HrLine } from "../Component";
+import { HrLine } from "../Components";
 import LoginWithGoogle from "./LoginWithGoogle";
 
 export default ()=>{
@@ -52,9 +52,9 @@ function ThisForm(){
         pop.type("loading").title("Creating Your Account").message("Please wait for a while. . .").run();
         ApiRequestCSRF().then(x=>{
             ApiSignUp(value).s201(data=>{
-                const {message, token} = data;
+                const {notify, token} = data;
                 authToken.store(token);
-                Notif.patch(gCast).new(message);
+                Notif.patch(gCast).new(notify);
                 navigate('/');
                 pop.type("success").title("Account Created").message("Welcome to Musifier!").button(true, false).run();
             }).s422(data=>{
@@ -62,8 +62,8 @@ function ThisForm(){
                 err.batch( laravelValErrToStr(data.errors) );
             }).sOthers(data=>{
                 pop.close().run();
-                const message = "Your account is not yet created. Something happened on our end. Please try again later.";
-                Notif.patch(gCast).new(message);
+                const notify = "Your account is not yet created. Something happened on our end. Please try again later.";
+                Notif.patch(gCast).new(notify);
             });
         }).catch(x=>{
             pop.close().run();

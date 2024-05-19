@@ -23,11 +23,11 @@ export function ListingView(props){
 
 
     //Clone children to allow self modification
-    const newChildren = copyChildren(children, {viewType:"wide"});
+    const newChildren = copyChildren(children, {viewType:viewType});
 
-    console.log(newChildren);
+
     return <>
-        <main>
+        <main className=" w-full flex flex-wrap gap-2">
             {newChildren}
         </main>
     </>
@@ -37,11 +37,13 @@ export function ListingItem(props){
     const {name, description, viewType} = props;
 
     return <>
-        <div>
-            {name}
-        </div>
-        <div>
-            {description}
+        <div className="">
+            <div>
+                {name}
+            </div>
+            <div>
+                {description}
+            </div>
         </div>
     </>
 

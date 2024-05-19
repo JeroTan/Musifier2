@@ -39,5 +39,8 @@ class Account extends User
     public function record(){
         return $this->belongsTo(Record::class);
     }
+    public function accountVerification(){
+        return $this->hasMany( AccountVerification::class );
+    }
 
 }

@@ -1,5 +1,5 @@
 import PagePlate from "../../PagePlate/PagePlate";
-import { ListingItem, ListingView } from "../Component";
+import { ListingItem, ListingView } from "../Components";
 
 export function ListInstruments(){
     return <>
