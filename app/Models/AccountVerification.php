@@ -12,7 +12,7 @@ class AccountVerification extends Model
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
-    //protected $table = 'account_verification';
+    protected $table = 'account_verification';
     //protected $primaryKey = 'id';
     // protected $keyType = ['id','string'];
     public $incrementing = true;
@@ -22,6 +22,7 @@ class AccountVerification extends Model
     public function account(){
         return $this->belongsTo( Account::class, "accountId" );
     }
+
 
 
 }

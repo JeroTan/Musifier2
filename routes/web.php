@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Web\V1\Authenticate;
 use App\Mail\V1\WelcomeVerifyEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -23,6 +24,10 @@ Route::get('/test/mail', function(){
     return "DONE!";
 });
 
+
+
+//Verify Email
+Route::get('verify_email', [Authenticate::class, "verifyEmail"]);
 
 /* For Single Page Application */
 /**

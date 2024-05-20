@@ -11,7 +11,7 @@ class Query{
         $this->queries = $query;
     }
 
-    public function filled($keys){
+    public function filled(array $keys = []){
         //Make storage for new query
         $newQuery = [];
         foreach($keys as $key){

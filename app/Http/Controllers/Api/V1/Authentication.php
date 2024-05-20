@@ -70,13 +70,15 @@ class Authentication extends Controller
         //Auth::guard("web")->login(Auth::user()); //Even This
         //session()->regenerate(); //Since this is an api
 
-        //Queue Email for verification
+        //Make a verification record;
         $verificationRecord = new AccountVerification;
-        $user->accountVerification()->associate($verificationRecord);
+        $verificationRecord->account()->associate($user);
         $verificationRecord->key = Crypt::encryptString($user->email);
         $verificationRecord->purpose  = "email";
         $verificationRecord->save();
-        Mail::to($user->email)->queue( new WelcomeVerifyEmail($user->username, url("/verifyEmail/?q=".$verificationRecord->key)) );
+
+        //Queue Email for verification
+        Mail::to($user->email)->queue( new WelcomeVerifyEmail($user->username, url("/verify_email/?q=".$verificationRecord->key)) );
 
         //create a token
         $token = $user->createToken($user->username)->plainTextToken;

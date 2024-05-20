@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="width: 100%; height: 100%">
+<html lang="en" style="position:relative; height:100%">
 <head>
     <meta charset="UTF-8">
     <meta name="author" content="OnlyMeChanics">
@@ -13,7 +13,7 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id" content="10406787598-m26739mjit32isfgqn85tp5lcah1iuk3.apps.googleusercontent.com">
 </head>
-<body style="width: 100%; height: 100%; position:relative; ">
+<body style=" height: 100%; position:relative; ">
     @viteReactRefresh
     @vite('resources/js/app.jsx')
     <div class="" id="root" style="position: relative"></div>
