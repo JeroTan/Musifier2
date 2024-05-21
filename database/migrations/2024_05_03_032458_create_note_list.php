@@ -19,6 +19,8 @@ return new class extends Migration
             $table->longText("stringNotes");
             $table->timestamps();
 
+            $table->index(["recordId", "name"]);
+
         });
     }
 

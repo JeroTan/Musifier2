@@ -37,7 +37,7 @@ export function ListingItem(props){
     const {name, description, viewType} = props;
 
     return <>
-        <div className="">
+        <div className={` ${viewType=="wide"&&"w-full"} p-2 rounded bg-gray-900/50  `}>
             <div>
                 {name}
             </div>

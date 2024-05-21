@@ -20,6 +20,8 @@ return new class extends Migration
             $table->longText('musicName')->nullable();
             $table->longText('musicArtist')->nullable();
             $table->timestamps();
+
+            $table->index(["instrumentId", "accountId", "name"]);
         });
     }
 

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->longText("key");
             $table->longText("purpose");
             $table->timestamps();
+
+            $table->index(["accountId"]);
         });
     }
 

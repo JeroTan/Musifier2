@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('displayName', 32)->nullable();
             $table->string('picture')->nullable();
             $table->timestamps();
+
+
         });
     }
 
