@@ -59,34 +59,4 @@ export function LogoTag(){
     </>
 }
 
-export function InputBox(props){
-    const {fieldName, error, className, children, onInput, outClass } = props;//This class is non-attributes
-    const displayName = props.displayName ?? capitalFirst(fieldName);//If displayName is not provided then field name will be used instead
-    const canSelfSet = props.canSelfSet ?? true; //Set whether the logic from onInput will still pass the set and state since it will automatically set the data;
-    const attributes = propertyExclusion(["fieldName", "error", "displayName", "id", "className", "children", "onInput", "key", "outClass", "canSelfSet"], props);
 
-    const [ inputState, inputSet ] = useState("");
-
-    //Function
-    function onInputRevise(e){//To insert a callback outside of this inputBox
-        if(!onInput)
-            return inputSet(e.target.value);
-
-
-        if(canSelfSet){
-            onInput(e);
-            return inputSet(e.target.value);
-        }
-
-        onInput(e, inputState, inputSet);
-    }
-
-    return <>
-        <div className={` ${outClass || "flex flex-wrap mb-3"} `}>
-            <label htmlFor={fieldName} className=" my-subtext">{displayName}</label>
-            <input id={fieldName} name={fieldName} className={` my-textbox ${className} ${error && "my-errorbox"}`} value={inputState} onInput={onInputRevise} {...attributes} />
-            <small className="my-infotext text-red-400">{error}</small>
-            {children}
-        </div>
-    </>
-}

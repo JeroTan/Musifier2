@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import mixer from "../../../images/authenticate/mixer.jpg";
-import { Form, InputBox, MainPage } from "./Components";
+import { Form, MainPage } from "./Components";
+import { InputBox } from "../Components";
 import { useContext, useState } from "react";
 import { Data } from "../../helpers/ParseArgument";
 import { GlobalStateContext } from "../../Utilities/GlobalState";

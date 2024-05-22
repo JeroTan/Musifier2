@@ -13,9 +13,15 @@ class InstrumentSeeder extends Seeder
      */
     public function run(): void
     {
-        Instrument::create([
-            ["name"=>"Electric Guitar"],
-            ["name"=>"Electric Piano"],
+        Instrument::insert([
+            [
+                "name"=>"Electric Guitar",
+                "description"=>"Use the fret-board interface to make a notes and chords. You may also add a TAB for future reuse."
+            ],
+            [
+                "name"=>"Piano",
+                "description"=>"A basic piano interface that covers standard 88 keys. You may use this to create basic sheets."
+            ],
         ]);
     }
 }

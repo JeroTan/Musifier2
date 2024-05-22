@@ -33,5 +33,8 @@ Route::prefix('v1')->group(function(){
         Route::delete('/logout', "logout")->middleware("auth:sanctum");
     });
 
-    Route::middleware("auth:sanctum")->apiResource("instrument", Instrument::class);
+    Route::controller(Instrument::class)->prefix("instrument")->group(function(){
+        Route::get("/", "index");
+    });
+
 });

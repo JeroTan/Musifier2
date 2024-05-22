@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import band_practice from "../../../images/authenticate/band_practice.jpg";
-import { Form, InputBox, MainPage } from "./Components";
+import { Form, MainPage } from "./Components";
+import { InputBox } from "../Components";
 import { useContext, useState } from "react";
 import { ApiRequestCSRF, ApiSignUp, ApiVerifySignupData, authToken } from "../../Utilities/Api";
 import { Data, Error, laravelValErrToStr, objToString } from "../../helpers/ParseArgument";
@@ -78,7 +79,7 @@ function ThisForm(){
         <small className="my-subtext block text-slate-400">Already have an account? <Link className="text-sky-300" to={"/login"}>Login</Link> it now.</small>
         <div className="my-6"></div>
 
-        <InputBox fieldName="username" onInput={verifyData} error={error.username} />
+        <InputBox fieldName="username" onInput={verifyData} error={error.username} value={value.username} />
         <InputBox fieldName="email" onInput={verifyData} error={error.email} />
         <InputBox fieldName="password" type="password" onInput={verifyData} error={error.password} />
         <InputBox fieldName="confirmPassword" displayName="Confirm Password" type="password" onInput={verifyData} error={error.confirmPassword} />

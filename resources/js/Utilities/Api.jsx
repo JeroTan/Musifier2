@@ -55,3 +55,13 @@ export function ApiLogOut(){
     return resolver;
 }
 //**<< Authentication */
+
+
+//>> Instruments //
+export function ApiGetInstrument(params = {}){
+    const request = api.reset().url("instrument").auth().params(params).get().request();
+    const resolver = new Resolve(request);
+    return resolver;
+}
+
+//<< Instruments //

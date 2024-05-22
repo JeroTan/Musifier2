@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('instrument', function (Blueprint $table) {
             $table->id();
             $table->string("name", 32)->unique();
+            $table->longText("description")->nullable();
         });
     }
 
