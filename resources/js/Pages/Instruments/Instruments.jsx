@@ -3,6 +3,12 @@ import PagePlate from "../../PagePlate/PagePlate";
 import Icon from "../../Utilities/Icon";
 import { Container, InputBar, InputBox, ListingItem, ListingView } from "../Components";
 import { ApiGetInstrument } from "../../Utilities/Api";
+import { Cacher, Debouncer } from "../../helpers/ParseData";
+
+
+//Outside Logic
+const searchDebouncer = new Debouncer(250);
+const cacheInstrument = new Cacher("instrument");
 
 export function ListInstruments(){
 
@@ -54,30 +60,43 @@ export function View(){
 
     //Functionality
     function setSearch(e){
-        const { value } = e.target.value;
-        viewCast({filter:"updateSearch", val:value});
+        searchDebouncer.do(()=>{
+            const { value } = e.target;
+            viewCast({filter:"updateSearch", val:value});
+        }).run();
     }
     function setView(){
         viewCast({filter:"toggleView"});
     }
-    function doSearch(){
+    function getInstrument(){
+        const query = {
+            search:viewState.filter.search
+        }
 
+        //Cache
+        if( viewState.instruments === undefined && cacheInstrument.exist("data") )
+            return viewCast({instruments:"update", val:JSON.parse(cacheInstrument.get("data")) });
+
+        ApiGetInstrument(query).s200(data=>{
+            if(  cacheInstrument.exist("data", data) )
+                return;
+
+            cacheInstrument.store("data", data);
+            viewCast({instruments:"update", val:data});
+        });
     }
-    function setInstruments(val){
-        viewCast({instruments:"update", val:val});
-    }
+
 
 
     return <>
         <h1 className=" my-title mb-4">Instruments</h1>
 
-        <FetchData setInstruments={setInstruments} />
-        <FilterContents setSearch={setSearch} setView={setView} doSearch={doSearch} />
+        <FetchData state={viewState} getInstrument={getInstrument} />
+        <FilterContents setSearch={setSearch} setView={setView} doSearch={getInstrument} />
         <div className="mt-5"></div>
         <ListingView>
             {viewState.instruments?<>
                 {viewState.instruments.map(x=>{
-                    console.log(x);
                     return <ListingItem key={x.id} name={x.name} description={x.description}  />
                 })}
             </>:<>
@@ -87,14 +106,13 @@ export function View(){
 }
 
 function FetchData(props){
-    const { state, setInstruments } = props;
-    // const { search } = state;
+    const { state, getInstrument } = props;
+    const { search } = state.filter;
 
+    //Watch if data changed to fetch a new data
     useEffect(()=>{
-        ApiGetInstrument().s200(data=>{
-            setInstruments(data);
-        });
-    }, [])
+        getInstrument();
+    }, [search]);
 
     return;
 }
@@ -127,7 +145,7 @@ export function Search(props){
 
     return <>
         <div className=" flex gap-2">
-            <InputBar name="search" onClick={setSearch} />
+            <InputBar name="search" onInput={setSearch} />
             <button className=" my-btn px-3" onClick={doSearch}>
                 <Icon name="search" inClass=" fill-gray-800" outClass=" w-4 h-4" />
             </button>

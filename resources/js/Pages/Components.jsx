@@ -1,6 +1,6 @@
 import { cloneElement, useEffect, useRef, useState } from "react";
 import { ElementResolver, copyChildren } from "../Utilities/ReactParse";
-import { capitalFirst, propertyExclusion } from "../helpers/ParseArgument";
+import { capitalFirst, propertyExclusion } from "../helpers/ParseData";
 
 export function HrLine({children}){
     return <>
@@ -78,7 +78,9 @@ export function InputBox(props){
 }
 
 export function InputBar(props){
-    const { className, onInput, error} = props;
+    const { onInput } = props;
+    const className = props.className ?? "";
+    const error = props.error ?? "";
     const canSelfSet = props.canSelfSet ?? true; //Set whether the logic from onInput will still pass the set and state since it will automatically set the data;
     const attributes = propertyExclusion([ "error", "id", "className", "children", "onInput", "key", "canSelfSet"], props);
 
@@ -89,7 +91,6 @@ export function InputBar(props){
     function onInputRevise(e){//To insert a callback outside of this inputBox
         if(!onInput)
             return inputSet(e.target.value);
-
 
         if(canSelfSet){
             onInput(e);

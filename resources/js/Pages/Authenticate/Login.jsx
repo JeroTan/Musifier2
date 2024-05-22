@@ -3,7 +3,7 @@ import mixer from "../../../images/authenticate/mixer.jpg";
 import { Form, MainPage } from "./Components";
 import { InputBox } from "../Components";
 import { useContext, useState } from "react";
-import { Data } from "../../helpers/ParseArgument";
+import { Data } from "../../helpers/ParseData";
 import { GlobalStateContext } from "../../Utilities/GlobalState";
 import { ApiLogIn, ApiRequestCSRF, authToken } from "../../Utilities/Api";
 import { Notif } from "../../helpers/Notif";

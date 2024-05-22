@@ -1,5 +1,5 @@
 //My Helpers
-import { openLinkCallback } from "../helpers/ParseArgument.js";
+import { openLinkCallback } from "../helpers/ParseData.js";
 
 //React
 import { useState } from "react";

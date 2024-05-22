@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { IconList } from "../helpers/IconifyIcons.js";
-import { propertyExclusion } from "../helpers/ParseArgument.js";
+import { propertyExclusion } from "../helpers/ParseData.js";
 
 
 export default (props)=>{

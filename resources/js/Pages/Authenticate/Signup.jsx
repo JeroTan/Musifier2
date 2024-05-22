@@ -4,7 +4,7 @@ import { Form, MainPage } from "./Components";
 import { InputBox } from "../Components";
 import { useContext, useState } from "react";
 import { ApiRequestCSRF, ApiSignUp, ApiVerifySignupData, authToken } from "../../Utilities/Api";
-import { Data, Error, laravelValErrToStr, objToString } from "../../helpers/ParseArgument";
+import { Data, Error, laravelValErrToStr, objToString } from "../../helpers/ParseData";
 import { Pop } from "../../helpers/Pop";
 import { GlobalStateContext } from "../../Utilities/GlobalState";
 import { Notif } from "../../helpers/Notif";

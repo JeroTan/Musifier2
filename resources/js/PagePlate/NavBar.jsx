@@ -5,7 +5,7 @@ import logoDarkMode from "../../images/logo/Musifier_Logo_Dark.svg";
 
 //React
 import { Link, useNavigate } from "react-router-dom"
-import { propertyExclusion } from "../helpers/ParseArgument";
+import { propertyExclusion } from "../helpers/ParseData";
 import { GlobalStateContext } from "../Utilities/GlobalState";
 import { authToken } from "../Utilities/Api";
 

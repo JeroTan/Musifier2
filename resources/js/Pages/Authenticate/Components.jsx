@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { capitalFirst, propertyExclusion } from "../../helpers/ParseArgument";
+import { capitalFirst, propertyExclusion } from "../../helpers/ParseData";
 import PagePlate from "../../PagePlate/PagePlate";
 import logoDarkMode from "../../../images/logo/Musifier_Logo_Dark.svg";
 import { Link, useNavigate } from "react-router-dom";
