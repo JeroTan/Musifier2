@@ -100,7 +100,8 @@ class TableQuery{
         $sortColumnCopy = [];
         foreach($this->allowedColumnsToSort as $column){//No copy only the column that is allowed in sorting
             $order = array_search($column, $rawSortOrder);
-            if(!$order)
+
+            if($order === false)
                 continue;
 
             $sortColumnCopy[$order] = $column;

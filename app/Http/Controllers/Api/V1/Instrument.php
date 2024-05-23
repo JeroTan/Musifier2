@@ -17,7 +17,7 @@ class Instrument extends Controller
         $query = new InstrumentQuery($request->query());
         $query = $query->canSearch()->canSort()->getQueries();
         $database = new QueryDatabase(new ModelsInstrument, $query);
-        $instrument = $database->doSearch()->getDb()->get();
+        $instrument = $database->doSearch()->doSort()->getDb()->get();
         return response()->json($instrument, 200);
     }
 

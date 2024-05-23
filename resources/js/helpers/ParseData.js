@@ -287,3 +287,44 @@ export class Cacher{
         return this;
     }
 }
+
+//Make a condition that uses chaining instead and it will only return a value depending on where that part has true condition
+export class Conditioner{
+    constructor(){
+        this.reset();
+    }
+    reset(){
+        this.currentCondition = false;
+        this.callbackToReturn = ()=>false;
+        return this;
+    }
+    if(condition=false, callback=()=>true){
+        if(this.currentCondition)//Return already once condition is finally true
+            return this;
+
+        if(condition){
+            this.currentCondition = true;
+            this.callbackToReturn = callback;
+        }
+
+        return this;
+    }
+    ifNot( condition=true, callback=()=>true ){
+        return this.if( !condition, callback );
+    }
+    finally(callback = ()=>true){
+        if(this.currentCondition)//Return already once condition is finally true
+            return this;
+        this.currentCondition = true;
+        this.callbackToReturn = callback;
+        return this;
+    }
+    return(defaultValue = false){ //you may return default value if everything fails
+        if(this.currentCondition){
+            return this.callbackToReturn(this);
+        }
+        if(typeof defaultValue == "function")
+            return defaultValue(this);
+        return defaultValue;
+    }
+}

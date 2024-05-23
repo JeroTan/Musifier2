@@ -1,6 +1,7 @@
 import { cloneElement, useEffect, useRef, useState } from "react";
 import { ElementResolver, copyChildren } from "../Utilities/ReactParse";
 import { capitalFirst, propertyExclusion } from "../helpers/ParseData";
+import Icon from "../Utilities/Icon";
 
 export function HrLine({children}){
     return <>
@@ -35,13 +36,34 @@ export function ListingItem(props){
     const {name, description, viewType} = props;
 
     return <>
-        <div className={` ${viewType!="wide"&&"w-full"} p-2 rounded bg-gray-900/50 hover:bg-gray-700 cursor-pointer  `}>
+        <div className={` ${viewType=="wide"&&"w-full"} p-2 rounded bg-gray-900/50 hover:bg-gray-700 cursor-pointer  `}>
             <div className=" my-text-big">
                 {name}
             </div>
+            { viewType=="wide"&&<>
             <div className=" my-subtext text-slate-400">
                 {description}
             </div>
+            </>}
+
+        </div>
+    </>
+}
+
+export function ListingEmpty(props){
+    const {children} = props;
+    return <>
+        <div className=" w-full p-2 rounded bg-gray-900/50 hover:bg-gray-700 cursor-pointer">
+            <p className=" my-text text-center">{children}</p>
+        </div>
+    </>
+}
+
+export function ListingLoading(props){
+    const {viewType} = props;
+    return <>
+        <div className={` ${viewType=="wide"&&"w-full"} p-2 rounded bg-gray-500 animate-pulse`}>
+            <div className="w-96 h-10"></div>
         </div>
     </>
 }
@@ -101,5 +123,126 @@ export function InputBar(props){
     }
     return <>
         <input className={` my-textbox ${className} ${error && "my-errorbox"}`} value={inputState} onInput={onInputRevise} {...attributes} />
+    </>
+}
+
+
+
+
+//FILTERERS
+export function FilterHeader(props){
+    const {children} = props;
+    if( !(children?.length == 2) ){
+        throw new Error("FilterHeader needs only two element");
+    }
+    const [left, right] = children;
+
+    return <>
+        {/**Header Filter */}
+        <form className=" w-full flex flex-wrap justify-between gap-2" aria-label="Filtering Components" onSubmit={e=>e.preventDefault()}>
+            {/**Left Side */}
+            <div className="flex">
+                {left}
+            </div>
+            {/**Right Side */}
+            <div className=" flex gap-2 flex-wrap">
+                {right}
+            </div>
+        </form>
+    </>
+}
+export function Search(props){
+    const { setSearch, doSearch } = props;
+
+    return <>
+        <div className=" flex gap-2">
+            <InputBar name="search" onInput={setSearch} />
+            <button className=" my-btn px-3" onClick={doSearch}>
+                <Icon name="search" inClass=" fill-gray-800" outClass=" w-4 h-4" />
+            </button>
+        </div>
+    </>
+}
+
+export function ChangeView(props){
+    const { setView } = props;
+    const defaultView = props.defaultView ?? "wide";
+
+    const [state, setState] = useState("wideView");
+    useEffect(()=>{
+        setState(defaultView+"View");
+    }, []);
+
+    //Function
+    function changeView(){
+        const newView = state=="wideView"?"compactView":"wideView";
+        setView(newView == "wideView");
+        setState(newView);
+    }
+
+    return <>
+        <button className=" my-btn px-3 py-2" onClick={changeView}>
+            <Icon name={state} inClass=" fill-gray-800" outClass=" w-4 h-4" />
+        </button>
+    </>
+}
+
+export function Sorter(props){
+    const sortData = props.sortData; //{keyName:DisplayName, ... }
+    const sortOrdered = props.sortOrdered;
+
+    const [sortItem, sortItemSet] = useState([]);
+
+    useEffect(()=>{//Initialize One Time
+        const newSortItem = Object.keys(sortData).map((key, i)=>{
+            return {id:Date.now()+i, key:key, display:sortData[key], type:"ASC"};
+        })
+        sortItemSet(newSortItem);
+    }, []);
+
+    //Functionality
+    function sortTrigger(triggeredData){
+        const {key, type} = triggeredData;
+
+        const indexToAdvance = sortItem.findIndex(x=>x.key === key);
+        const newOrder = [ sortItem[indexToAdvance], ...sortItem.filter((x,i)=>i!==indexToAdvance) ];
+        newOrder[0].type = type;
+        sortOrdered(newOrder);
+        sortItemSet(newOrder);
+    }
+
+    return <>
+    <form className="w-full flex flex-wrap gap-2" onSubmit={e=>e.preventDefault()}>
+        {sortItem.map((x)=>{
+            return <SortItem key={x.id} displayName={x.display} keyName={x.key} trigger={sortTrigger}  />
+        })}
+    </form>
+    </>
+}
+
+export function SortItem(props){
+    const displayName = props.displayName;
+    const keyName = props.keyName;
+    const trigger = props.trigger ?? (()=>true);
+
+    //useState
+    const [state, stateSet] = useState("up");
+
+    function toggleState(){
+        trigger({
+            key:keyName,
+            type:state!="up"?"ASC":"DESC"
+        });
+        stateSet(prev=>{
+            const newState = prev=="up"?"down":"up";
+            return newState;
+        });
+    }
+
+    return <>
+        <button type="button" className="flex items-center gap-1 hover:scale-105 hover:brightness-90 " onClick={toggleState}>
+            <span className=" my-subtext ">{displayName}</span>
+            <Icon name={state} inClass=" fill-slate-300" outClass=" w-4 h-4" />
+        </button>
     </>
 }
