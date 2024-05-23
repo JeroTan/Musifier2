@@ -74,20 +74,21 @@ export function View(){
         }
 
         //Cache
-        if( viewState.instruments === undefined && cacheInstrument.exist("data") )
-            return viewCast({instruments:"update", val:JSON.parse(cacheInstrument.get("data")) });
+        if(viewState.instruments === undefined){
+            cacheInstrument.cExist("data").cDoWhenExist(x=>{
+                viewCast({ instruments:"update", val:JSON.parse(x) });
+            });
+        }
 
         ApiGetInstrument(query).s200(data=>{
-            if(  cacheInstrument.exist("data", data) )
-                return;
+            cacheInstrument.cExist("data", data).cStore().cDoWhenNotExist(x=>{
+                viewCast({instruments:"update", val:data});
+            });
 
-            cacheInstrument.store("data", data);
-            viewCast({instruments:"update", val:data});
         });
     }
 
-
-
+    //View DOM
     return <>
         <h1 className=" my-title mb-4">Instruments</h1>
 

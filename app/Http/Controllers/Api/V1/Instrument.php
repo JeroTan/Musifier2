@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Helpers\QueryDatabase;
+use App\HelperUtilities\TableQuery\InstrumentQuery;
 use App\Http\Controllers\Controller;
 use App\Models\Instrument as ModelsInstrument;
 use Illuminate\Http\Request;
@@ -11,9 +13,11 @@ class Instrument extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $instrument = ModelsInstrument::all();
+    public function index(Request $request){
+        $query = new InstrumentQuery($request->query());
+        $query = $query->canSearch()->canSort()->getQueries();
+        $database = new QueryDatabase(new ModelsInstrument, $query);
+        $instrument = $database->doSearch()->getDb()->get();
         return response()->json($instrument, 200);
     }
 

@@ -182,9 +182,15 @@ export class Debouncer {
 //CACHEr - use this to store a data in localstorage;
 export class Cacher{
     constructor(baseKey = ""){
-        if(!baseKey)
+        if(baseKey)
             this.baseKey = baseKey;
-        this.baseKey = "";
+        else{
+            this.baseKey = undefined;
+        }
+
+        this.cDataExist = undefined; //boolean when used
+        this.cDataToStore = {key:"", value:""};
+        this.cDataCurrent = "";
     }
     //** InHouse */
     valueTransform(value){
@@ -203,11 +209,9 @@ export class Cacher{
         const THIS = this;
         if(typeof key === "string" ){
             value = THIS.valueTransform(value);
-            if( THIS.exist(key, value) )
-                return this;
 
             if(this.baseKey)
-                key == this.baseKey+"."+key;
+                key = this.baseKey+"."+key;
 
             localStorage.setItem(key, value);
             return this;
@@ -220,11 +224,9 @@ export class Cacher{
             let value = key[i];
             let key = i;
             value = THIS.valueTransform(value);
-            if( THIS.exist(key, value) )
-                return this;
 
             if(this.baseKey)
-                key == this.baseKey+"."+key;
+                key = this.baseKey+"."+key;
 
             localStorage.setItem(key, value);
         }))
@@ -232,7 +234,7 @@ export class Cacher{
     }
     exist(key, value = undefined){
         if(this.baseKey)
-            key == this.baseKey+"."+key;
+            key = this.baseKey+"."+key;
         if(value === undefined){
             return localStorage.getItem(key) !== null
         }
@@ -241,8 +243,47 @@ export class Cacher{
     }
     get(key){
         if(this.baseKey)
-            key == this.baseKey+"."+key;
+            key = this.baseKey+"."+key;
         return localStorage.getItem(key);
     }
 
+    //This is for chaining |If the data already exist and it's the same data then do not store and do not do or not do the callback
+    cExist(key, value = undefined){
+        this.cDataExist = this.exist(key, value);
+        this.cDataToStore = {key:key, value:value};
+        if(this.cDataExist)
+            this.cDataCurrent = this.get(key);
+        return this;
+    }
+    cStore(key=false, value=false){
+        if(this.cDataExist)
+            return this;
+        if(key)
+            this.cDataToStore.key = key;
+        if(value)
+            this.cDataToStore.value = value;
+
+        this.store(this.cDataToStore.key, this.cDataToStore.value);
+        return this;
+    }
+    cDoWhenNotExist(callback = ()=>true){
+        if(this.cDataExist)
+            return this;
+
+        callback(this.cDataCurrent);
+        return this;
+    }
+    cDoWhenExist(callback = ()=>true){
+        if(!this.cDataExist)
+            return this;
+
+        callback(this.cDataCurrent);
+        return this;
+    }
+    cReset(){//reset the cDataExist and cDataToStore Here
+        this.cDataExist = undefined;
+        this.cDataToStore = {key:"",value:""}
+        this.cDataCurrent = ""
+        return this;
+    }
 }
