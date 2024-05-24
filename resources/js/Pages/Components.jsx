@@ -2,6 +2,7 @@ import { cloneElement, useEffect, useRef, useState } from "react";
 import { ElementResolver, copyChildren } from "../Utilities/ReactParse";
 import { capitalFirst, propertyExclusion } from "../helpers/ParseData";
 import Icon from "../Utilities/Icon";
+import { Link } from "react-router-dom";
 
 export function HrLine({children}){
     return <>
@@ -21,7 +22,6 @@ export function ListingView(props){
 
     //UseState
 
-
     //Clone children to allow self modification
     const newChildren = copyChildren(children, {viewType:viewType});
 
@@ -33,10 +33,10 @@ export function ListingView(props){
 }
 
 export function ListingItem(props){
-    const {name, description, viewType} = props;
+    const {name, description, viewType, link} = props;
 
     return <>
-        <div className={` ${viewType=="wide"&&"w-full"} p-2 rounded bg-gray-900/50 hover:bg-gray-700 cursor-pointer  `}>
+        <Link className={` ${viewType=="wide"&&"w-full"} p-2 rounded bg-gray-900/50 hover:bg-gray-700 cursor-pointer  `} to={link}>
             <div className=" my-text-big">
                 {name}
             </div>
@@ -46,7 +46,7 @@ export function ListingItem(props){
             </div>
             </>}
 
-        </div>
+        </Link>
     </>
 }
 
@@ -68,7 +68,7 @@ export function ListingLoading(props){
     </>
 }
 
-
+//CONTENT VIEW
 export function Container(props){
     const children = props.children;
     const attributes = propertyExclusion(["children"], props);
@@ -81,7 +81,7 @@ export function Container(props){
     </div>
     </>
 }
-
+//<------------
 
 //FORM
 export function InputBox(props){
@@ -125,7 +125,7 @@ export function InputBar(props){
         <input className={` my-textbox ${className} ${error && "my-errorbox"}`} value={inputState} onInput={onInputRevise} {...attributes} />
     </>
 }
-
+//<------------
 
 
 
@@ -246,3 +246,4 @@ export function SortItem(props){
         </button>
     </>
 }
+//<------------

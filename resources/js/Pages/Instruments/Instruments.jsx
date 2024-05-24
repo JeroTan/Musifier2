@@ -3,8 +3,9 @@ import PagePlate from "../../PagePlate/PagePlate";
 import Icon from "../../Utilities/Icon";
 import { ChangeView, Container, FilterHeader, InputBar, InputBox, ListingEmpty, ListingItem, ListingLoading, ListingView, Search, Sorter } from "../Components";
 import { ApiGetInstrument } from "../../Utilities/Api";
-import { Cacher, Conditioner, Debouncer } from "../../helpers/ParseData";
+import { Cacher, Conditioner, Debouncer, onlyAlphaString } from "../../helpers/ParseData";
 import { copyChildren } from "../../Utilities/ReactParse";
+import { Outlet } from "react-router-dom";
 
 
 //Outside Logic
@@ -12,14 +13,20 @@ const searchDebouncer = new Debouncer(250);
 const sortDebouncer = new Debouncer(200);
 const cacheInstrument = new Cacher("instrument");
 
+export function InstrumentIndex(){
+    return <>
+    <PagePlate>
+        <Outlet />
+    </PagePlate>
+    </>
+}
+
 export function ListInstruments(){
 
     return <>
-        <PagePlate>
-            <Container className=" py-5 px-2">
-                <LogicView/>
-            </Container>
-        </PagePlate>
+        <Container className=" py-5 px-2">
+            <LogicView/>
+        </Container>
     </>
 }
 
@@ -114,7 +121,6 @@ export function LogicView(){
     }
     function setSort(data = []){
         sortDebouncer.do(x=>{
-            console.log("here2");
             const sortOrder = {};
             const sortType = {};
             data.forEach((sorter, i)=>{
@@ -141,7 +147,7 @@ export function LogicView(){
                 return <ListingEmpty>Result is Empty</ListingEmpty>
             }).finally(x=>{
                 const items = viewState.instruments.map(x=>{
-                    return <ListingItem key={x.id} name={x.name} description={x.description}  />
+                    return <ListingItem key={x.id} name={x.name} description={x.description} link={onlyAlphaString(x.name)} />
                 })
                 return copyChildren(items);
             }).return()}

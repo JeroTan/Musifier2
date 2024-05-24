@@ -1,7 +1,9 @@
 <?php
 
+use App\Helpers\Parser;
 use App\Http\Controllers\Web\V1\Authenticate;
 use App\Mail\V1\WelcomeVerifyEmail;
+use App\Models\Instrument;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -53,7 +55,10 @@ req("/join");
 
 //Instruments
 req("/instrument");
-req("/instrument/{id}");
+$instruments = Instrument::all();
+foreach($instruments as $instrument){
+    req("/instrument/".Parser::noSpaces($instrument->name));
+}
 
 
 

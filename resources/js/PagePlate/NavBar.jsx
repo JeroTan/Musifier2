@@ -21,8 +21,8 @@ export default ()=>{
 
     //Data Structure
     const instrumentItems = <>
-        <DropDownItem name="Electric Guitar" to="/inst/electricguitar" />
-        <DropDownItem name="Piano" to="/inst/piano"/>
+        <DropDownItem name="Electric Guitar" to="/instrument/ElectricGuitar" />
+        <DropDownItem name="Piano" to="/instrument/Piano"/>
         <small className="text-slate-400">Still in Beta</small>
     </>
     const learnItems = <>

@@ -186,12 +186,13 @@ export class Resolve{
             try{
                 const {status, data} = await THIS.promiseResponse;
                 if( THIS.excludeStatus.some(x=>x==status) )
-                    return;
+                    return THIS;
                 callback(data);
             }catch(e){
                 console.error(e);
             }
         })(this);
+        return this;
     }
     sElse(callback){//This do a thing if everything is finish while it still returns like a normal one it is not recommended to use since it doesn't specify the status code
         return this.parseData(callback);
@@ -307,6 +308,8 @@ export class ApiRequestPlate{
                 "Accept": "application/json",
                 'Access-Control-Allow-Credentials': 'true',
                 "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "DELETE, POST, GET, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With",
                 "Content-Type": "application/json",
             },
             signal: abortion.signal,

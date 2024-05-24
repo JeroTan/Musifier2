@@ -4,7 +4,10 @@ import Homepage from "../Pages/Homepage"
 import Login from "../Pages/Authenticate/Login"
 import Signup from "../Pages/Authenticate/Signup"
 import Logout from "../Pages/Authenticate/Logout"
-import { ListInstruments } from "../Pages/Instruments/Instruments"
+import { InstrumentIndex, ListInstruments } from "../Pages/Instruments/Instruments"
+import { ElectricGuitarIndex } from "../Pages/Instruments/Types/ElectricGuitar"
+import { PianoIndex } from "../Pages/Instruments/Types/Piano"
+import { InstrumentNotFound } from "../Pages/Instruments/Types/NotFound"
 
 export default ()=>{
     return <BrowserRouter>
@@ -19,8 +22,12 @@ export default ()=>{
             <Route path="/logout" element={<Logout />} />
 
             {/* Instruments */}
-            <Route path="instrument" element={<ListInstruments />}>
+            <Route path="/instrument" element={<InstrumentIndex />}>
+                <Route index element={ <ListInstruments />} />
+                <Route path="ElectricGuitar" element={ <ElectricGuitarIndex /> } />
+                <Route path="Piano" element={ <PianoIndex /> } />
 
+                <Route path="*" element={ <InstrumentNotFound /> } />
             </Route>
 
             {/* Fallback */}
