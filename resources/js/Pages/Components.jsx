@@ -36,7 +36,7 @@ export function ListingItem(props){
     const {name, description, viewType, link} = props;
 
     return <>
-        <Link className={` ${viewType=="wide"&&"w-full"} p-2 rounded bg-gray-900/50 hover:bg-gray-700 cursor-pointer  `} to={link}>
+        <Link className={` ${viewType=="wide"&&"w-full"} p-2 rounded bg-gray-900 hover:bg-gray-700 cursor-pointer  `} to={link}>
             <div className=" my-text-big">
                 {name}
             </div>
@@ -70,11 +70,10 @@ export function ListingLoading(props){
 
 //CONTENT VIEW
 export function Container(props){
-    const children = props.children;
-    const attributes = propertyExclusion(["children"], props);
+    const { children, noMargin=false, ...attributes } = props;
 
     return <>
-    <div className="w-full pt-16 relative flex justify-center">
+    <div className={`w-full ${!noMargin?"pt-16":""} relative flex justify-center`}>
         <main style={{flexBasis: "70rem"}} {...attributes}>
             {children}
         </main>
@@ -100,11 +99,11 @@ export function InputBox(props){
 }
 
 export function InputBar(props){
-    const { onInput } = props;
-    const className = props.className ?? "";
-    const error = props.error ?? "";
-    const canSelfSet = props.canSelfSet ?? true; //Set whether the logic from onInput will still pass the set and state since it will automatically set the data;
-    const attributes = propertyExclusion([ "error", "id", "className", "children", "onInput", "key", "canSelfSet"], props);
+    const {
+        onInput, className = "", error="", canSelfSet=true,
+        id, children, key,
+        ...attributes
+    } = props;
 
     //InputState
     const [ inputState, inputSet ] = useState("");

@@ -1,4 +1,3 @@
-import Fretboard from "../Elements/Guitar/Fretboard"
 import PagePlate from "../PagePlate/PagePlate"
 import Icon from "../Utilities/Icon";
 

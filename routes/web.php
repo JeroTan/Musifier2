@@ -55,10 +55,9 @@ req("/join");
 
 //Instruments
 req("/instrument");
-$instruments = Instrument::all();
-foreach($instruments as $instrument){
-    req("/instrument/".Parser::noSpaces($instrument->name));
-}
+
+req("/instrument/ElectricGuitar");
+req("/instrument/Piano");
 
 
 

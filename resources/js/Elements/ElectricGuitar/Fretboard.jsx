@@ -1,6 +1,6 @@
+//THIS IS LAZY LOAD
 
-
-export default (props)=>{
+export default function(props){
     const children = props.children;
 
     return <>
@@ -102,8 +102,8 @@ export default (props)=>{
                 fill="#E4E4E7"
             />
         </>}
-        
-        
+
+
         {/**This is the board in fret board */}
         <rect y="30" width="1231" height="200" rx="10" fill="url(#paint0_linear_3_4)" />
 

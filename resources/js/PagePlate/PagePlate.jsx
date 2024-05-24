@@ -13,7 +13,7 @@ export default (props)=>{
     const footer = useMemo( ()=>!clean && <Footer /> , [clean] );
     const sideNav = useMemo( ()=>!clean && <SideNav /> , [clean] );
 
-    return <main className="relative min-h-screen flex flex-col bg-gray-800 text-slate-300">
+    return <main className="relative min-h-screen flex flex-col bg-gray-950 text-slate-300">
         {navbar}
 
         {/* The body of the page */}
