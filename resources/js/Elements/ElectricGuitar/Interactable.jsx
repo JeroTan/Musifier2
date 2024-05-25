@@ -1,45 +1,24 @@
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useCallback, useContext, useMemo } from "react"
 import { floorDecimal } from "../../helpers/Math";
+import { ElectricGuitarInterfaceStateContext, standardTune, standardRegister } from "./Structure";
 
-export default function(props){
+export function Interactable(props){
     //Global
-    const { getStates, setStates } = props;
-
-    // selfState
-    const [ tune, tuneSet ] = useState([0, 0, 0, 0, 0, 0]); //This will be use to swap the current standard register starting from thinnest string
-    const [ noteSequence, noteSequenceSet ] = useState([
-        'A', 'A_sharp', 'B', 'C', 'C_sharp', 'D', 'D_sharp', 'E', 'F', 'F_sharp', 'G', 'G_sharp'
-    ])
-    const [ notePick, notePickSet ] = useState([]); //Is the list of notes that are selected;
-    //const [ noteFlow, noteFlowSet ] = useState('Ascending'); //Descending or Ascending
+    const [ interfaceState, interfaceCast] = useContext(ElectricGuitarInterfaceStateContext);
+    const {
+        tune, //default: [0,0,0,0,0,0]; This will be use to swap the current standard register starting from thinnest string
+        noteSequence, //default: ['A', 'A_sharp', 'B', 'C', 'C_sharp', 'D', 'D_sharp', 'E', 'F', 'F_sharp', 'G', 'G_sharp']; This will be use to swap the current standard register starting from thinnest string
+        notePick, //[] List notes that are selected
+        noteFlow
+    } = interfaceState;
 
 
     // Functionality
-    const clickNote = useCallback((tone)=>{//This is a toggle and also a trigger for parent states
-        const pickIndex = notePick.indexOf(tone);
-        const notePickCopy = [...notePick];
-
-        if(pickIndex >= 0){
-            notePickCopy.splice(pickIndex, 1); //Since it is picked, remove it from the notePick;
-        }else{
-            //if not picked then add it to the list;
-            notePickCopy.push(tone);
-            //Get the root for sorting
-            const rootNote = notePickCopy[0];
-            notePickCopy.sort((next, current)=>{
-                //the rootNote must be always first regardless;
-                next =  (((next-rootNote)%12)+12)%12;
-                current = (((current-rootNote)%12)+12)%12;
-                return next - current;
-            });
-        }
+    const clickNote = useCallback((clickedNote)=>{//This is a toggle and also a trigger for parent states
         return e=>{
-            //getStates(x);
-            notePickSet(notePickCopy);
+            interfaceCast({notePick:"click", val:clickedNote});
         }
-    }, [notePick, getStates]);
-
-
+    }, [notePick]);
     //register is the current octave; tone is the note; notePick checks  whether the current selected tone is existed or picked in the notePick Array
     const transformToButtonColor = useCallback((register, tone, notePick)=>{
         const pickIndex = notePick.indexOf(tone);
@@ -51,40 +30,42 @@ export default function(props){
     }, []);
 
 
-    // sets
-    let toneLabelMap = [];
-    let toneButtonMap = [];
-    const standardTune = [7, 2, 10, 5, 0, 7]; //Starting from the thinnest string
-    const standardRegister = [52, 47, 43, 38, 33, 28]; //Same as above but this is used for overall octave of the string
+    //Generate Button Map
+    const toneMap = useMemo(()=>{
+        const label = [];
+        const button = [];
 
-    for(let i = 0; i <= 24; i++){ //posX
-        for(let j = 0; j < 6; j++){ //posY
-            //Calculate the final position
-            const posX = 49*i + (i > 0?15:11);//If not first then add a higher offset
-            const posY = 32*j + 35;
+        for(let i = 0; i <= 24; i++){ //posX
+            for(let j = 0; j < 6; j++){ //posY
+                //Calculate the final position
+                const posX = 49*i + (i > 0?15:11);//If not first then add a higher offset
+                const posY = 32*j + 35;
 
-            const cleanseTune = ((tune[j]%12)+12)%12; //To remove invalid negative value
-            const thisTone = (standardTune[j]+cleanseTune+i)%12;
-            const thisRegister = floorDecimal( (cleanseTune+standardRegister[j]+i)/12 );
-            console.log(`x:${i},y:${j}`, thisRegister );
-            const noteButtonColor = transformToButtonColor(thisRegister, thisTone, notePick);
-            const noteLabelKeyName = noteSequence[ thisTone ]; //Using its index to track the label key of the note Label
+                const tuneToNote = ((tune[j]%12)+12)%12; //To remove invalid negative value. The limit is same as the 12 standard note
+                const thisTone = (standardTune[j]+ (tuneToNote) +i)%12;
+                const thisRegister = floorDecimal( (tune[j]+standardRegister[j]+i)/12 );
+                // console.log(`x:${i},y:${j}`, thisRegister );
+                const noteButtonColor = transformToButtonColor(thisRegister, thisTone, notePick);
+                const noteLabelKeyName = noteSequence[ thisTone ]; //Using its index to track the label key of the note Label
 
-            //Insert it in the mapper
-            toneButtonMap[toneButtonMap.length] = (
-                <NoteButton name={ noteButtonColor } key={`btn_${i}_${j}`} posX={posX+14.5} posY={posY+14.5} onClick={clickNote(thisTone)}/>
-            )
+                //Insert it in the mapper
+                button[button.length] = (
+                    <NoteButton name={ noteButtonColor } key={`btn_${i}_${j}`} posX={posX+14.5} posY={posY+14.5} onClick={clickNote(thisTone)}/>
+                )
 
-            toneLabelMap[toneLabelMap.length] = (
-                <NoteLabel name={ noteLabelKeyName } key={`lbl_${i}_${j}`} posX={posX} posY={posY} className={`fill-slate-300 opacity-[0.9]`}/>
-            )
+                label[label.length] = (
+                    <NoteLabel name={ noteLabelKeyName } key={`lbl_${i}_${j}`} posX={posX} posY={posY} className={`fill-slate-300 opacity-[0.9]`}/>
+                )
+            }
         }
-    }
-    // FOr the note mapping we can use the 12 notes instead of frets and string like A = ["1_2", "4_4"]
+
+        //return the mapper
+        return {label: label, button: button};
+    }, [tune, noteSequence, notePick, noteFlow]);
 
     return <>
-        { toneButtonMap }
-        { toneLabelMap }
+        { toneMap.button }
+        { toneMap.label }
     </>
 }
 

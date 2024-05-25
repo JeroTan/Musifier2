@@ -1,6 +1,6 @@
 //THIS IS LAZY LOAD
 
-export default function(props){
+export function Fretboard(props){
     const children = props.children;
 
     return <>

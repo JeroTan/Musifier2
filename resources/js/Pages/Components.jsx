@@ -100,13 +100,20 @@ export function InputBox(props){
 
 export function InputBar(props){
     const {
-        onInput, className = "", error="", canSelfSet=true,
+        onInput, className = "", error="", canSelfSet=true, set,
         id, children, key,
         ...attributes
     } = props;
 
     //InputState
     const [ inputState, inputSet ] = useState("");
+
+    //When someone set on the parent
+    useEffect(()=>{
+        if(set === undefined)
+            return;
+        inputSet(set);
+    }, [set]);
 
     //Function
     function onInputRevise(e){//To insert a callback outside of this inputBox
