@@ -107,7 +107,6 @@ export function LogicView(){
             cacheInstrument.cExist("data").cDoWhenExist(x=>{
                 viewCast({ instruments:"update", val:JSON.parse(x) });
             });
-            return;
         }
 
         viewCast({loading:"instruments",val:true});

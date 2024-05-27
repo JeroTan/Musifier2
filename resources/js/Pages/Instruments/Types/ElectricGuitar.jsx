@@ -3,7 +3,7 @@ import { propertyExclusion } from "../../../helpers/ParseData";
 import { LoadingInstrument, InstrumentContainer } from "../Components.jsx";
 
 
-const ElectricGuitarInterface = lazy(()=> import("@/Elements/ElectricGuitar/Interface.jsx"));
+const ElectricGuitarInterface = lazy(()=> import("@/Elements/Instruments/ElectricGuitar/Interface.jsx"));
 
 export function ElectricGuitarIndex(){
     return <>

@@ -91,7 +91,7 @@ export function InputBox(props){
     return <>
         <div className={` ${outClass || "flex flex-wrap mb-3"} `}>
             <label htmlFor={fieldName} className=" my-subtext">{displayName}</label>
-            <InputBar name={fieldName} className={className} onInput={onInput} error={error} canSelfSet={canSelfSet} {...attributes} />
+            <InputBar name={fieldName} id={fieldName} className={className} onInput={onInput} error={error} canSelfSet={canSelfSet} {...attributes} />
             <small className="my-infotext text-red-400">{error}</small>
             {children}
         </div>
@@ -99,11 +99,7 @@ export function InputBox(props){
 }
 
 export function InputBar(props){
-    const {
-        onInput, className = "", error="", canSelfSet=true, set,
-        id, children, key,
-        ...attributes
-    } = props;
+    const { onInput, className = "", error="", canSelfSet=true, set, children, ...attributes } = props;
 
     //InputState
     const [ inputState, inputSet ] = useState("");
@@ -129,6 +125,43 @@ export function InputBar(props){
     }
     return <>
         <input className={` my-textbox ${className} ${error && "my-errorbox"}`} value={inputState} onInput={onInputRevise} {...attributes} />
+    </>
+}
+export function DropDown(props){
+    const { onChange, className = "", error="", canSelfSet=true, set, children,...attributes } = props;
+
+    //InputState
+    const [ inputState, inputSet ] = useState("");
+
+    //When someone set on the parent
+    useEffect(()=>{
+        if(set === undefined)
+            return;
+        inputSet(set);
+    }, [set]);
+
+    //Function
+    function onChangeRevise(e){//To insert a callback outside of this inputBox
+        if(!onChange)
+            return inputSet(e.target.value);
+
+        if(canSelfSet){
+            onChange(e);
+            return inputSet(e.target.value);
+        }
+
+        onChange(e, inputState, inputSet);
+    }
+
+    return <>
+    <select className={` my-textbox ${className} ${error && "my-errorbox"}`} value={inputState} onChange={onChangeRevise} {...attributes} >
+        { children }
+    </select>
+    </>
+}
+export function DropDownItem({className, children, ...attributes}){ //Use attribute label instead of children
+    return <>
+        <option className={` ${className}`} {...attributes}>{children}</option>
     </>
 }
 //<------------

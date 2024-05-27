@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useContext, useMemo } from "react"
-import { floorDecimal } from "../../helpers/Math";
+import { floorDecimal } from "@/helpers/Math";
 import { ElectricGuitarInterfaceStateContext, standardTune, standardRegister } from "./Structure";
 
 export function Interactable(props){

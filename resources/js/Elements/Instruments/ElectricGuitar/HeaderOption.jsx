@@ -1,17 +1,26 @@
 import { useContext, useState } from "react";
-import { InputBar } from "../../Pages/Components"
-import { ElectricGuitarInterfaceStateContext } from "./Structure";
-
+import { InputBar } from "@/Pages/Components"
+import { ElectricGuitarInterfaceStateContext, Scale } from "./Structure";
+import { DropDown, DropDownItem } from "../../../Pages/Components";
 
 export function TopOptions(){
     //Global
     const [ interfaceState, interfaceCast ] = useContext(ElectricGuitarInterfaceStateContext);
+    const scaleState = interfaceState.scale;
+
+    //Functionality
 
     return <>
     <header className=" w-full flex flex-wrap gap-5">
         <nav className="shrink-0">
             <label className=" my-text text-sky-300">Scale: </label>
-            <InputBar name="scale" />
+            <DropDown set={scaleState}>
+                { Object.keys(Scale).map(key=>{
+                    const data = Scale[key];
+                    return <DropDownItem key={key} label={data.displayName} value={key} />
+                }) }
+                <DropDownItem label="Not Selected" value="NotSelected" />
+            </DropDown>
         </nav>
         <nav className="shrink-0">
             <label className=" my-text text-sky-300">Mode: </label>
