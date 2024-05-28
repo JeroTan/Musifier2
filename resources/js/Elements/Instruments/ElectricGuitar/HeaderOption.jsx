@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import { InputBar } from "@/Pages/Components"
-import { ElectricGuitarInterfaceStateContext, Scale } from "./Structure";
+import { ElectricGuitarInterfaceStateContext } from "./Structure";
 import { DropDown, DropDownItem } from "../../../Pages/Components";
-import { notePattern } from "../Components";
+import { convertToNotes, notePattern, Scale } from "../Components";
 import Icon from "../../../Utilities/Icon";
 
 export function TopOptions(){
@@ -10,7 +10,7 @@ export function TopOptions(){
     const [ interfaceState, interfaceCast ] = useContext(ElectricGuitarInterfaceStateContext);
     const scaleState = interfaceState.scale;
     const modeState = interfaceState.mode;
-    const { notePick, pattern } = interfaceState;
+    const { notePick, noteFlow, pattern, interfaceType, isWritable } = interfaceState;
 
     //Functionality
     function updateScale(e){
@@ -24,9 +24,15 @@ export function TopOptions(){
     function togglePattern(e){
         interfaceCast({pattern:"toggle"});
     }
+    function toggleFlow(e){
+        interfaceCast({noteFlow:"toggle"});
+    }
+    function toggleInterface(e){
+        interfaceCast({interfaceType:"toggle"});
+    }
 
     return <>
-    <header className=" w-full flex flex-wrap gap-5">
+    <header className=" w-full flex flex-wrap gap-x-5 gap-y-2 mb-2">
         <nav className="shrink-0">
             <label className=" my-text text-sky-300">Scale: </label>
             <DropDown set={scaleState} onChange={updateScale}>
@@ -52,15 +58,32 @@ export function TopOptions(){
                 <Icon name="refresh"
                     inClass={"fill-slate-500 group-hover:fill-slate-400"}
                     outClass={"w-5 h-5 absolute cursor-pointer group z-10"}
-                    style={{top:"7px", left:"70px"}} onClick={togglePattern}
+                    style={{top:"7px", left:"72px"}} onClick={togglePattern}
                 />
             </>}
             <InputBar name="pattern" style={{ paddingLeft: "30px", width:"265px", flexBasis:"unset"}} disabled set={ notePattern(notePick, pattern).join(", ") } />
         </nav>
         <nav className="shrink-0">
             <label className=" my-text text-sky-300">Notes: </label>
-            <InputBar name="notes" disabled />
+            <InputBar name="notes" disabled style={{ width:"265px", flexBasis:"unset"}} set={convertToNotes(notePick, noteFlow=="Ascending"?"sharp":"flat").join(", ")} />
         </nav>
+        <nav className="shrink-0 flex gap-2">
+            <label className=" my-text text-sky-300">Flow: </label>
+            <div className=" cursor-pointer my-textbox flex gap-1 items-center group" style={{paddingLeft:"6px"}} onClick={toggleFlow} >
+                <Icon name="refresh" inClass={"fill-slate-500 group-hover:fill-slate-300"} outClass={"w-5 h-5"}   />
+                {noteFlow}
+            </div>
+        </nav>
+        {isWritable && <>
+            <nav className="shrink-0 flex gap-2">
+                <label className=" my-text text-sky-300 break-keep" style={{whiteSpace:"nowrap"}}>Interface Mode: </label>
+                <div className=" cursor-pointer my-textbox flex gap-1 items-center group" style={{paddingLeft:"6px"}} onClick={toggleInterface} >
+                    <Icon name="refresh" inClass={"fill-slate-500 group-hover:fill-slate-300"} outClass={"w-5 h-5"}   />
+                    {interfaceType}
+                </div>
+            </nav>
+        </>}
+
         <nav className="shrink-0 flex gap-2">
             <label className=" my-text text-sky-300">Octave/Register: </label>
             <OctaveLabel circle={false} text="Root" color="#EF4444" />

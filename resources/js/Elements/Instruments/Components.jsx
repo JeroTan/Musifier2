@@ -2,7 +2,7 @@ export function createMode(scalePattern = [], modeName = []){
     const mode = [];
 
     scalePattern.forEach((step, i)=>{ //Step means the gap between each pattern labeled by number;
-        const modeData = {key:i, displayName: modeName[i] !== undefined ? modeName[i] : i+1 , pattern: [] };
+        const modeData = {key:i, displayName: modeName[i] !== undefined && modeName[i] ? modeName[i] : i+1 , pattern: [] };
 
         const copyOriginalScalePattern = [...scalePattern]; //Make a copy so that the original will be remain untouched when we do a sorting on the next line'
         modeData.pattern = reorientPattern(copyOriginalScalePattern, step);
@@ -13,6 +13,22 @@ export function createMode(scalePattern = [], modeName = []){
         mode[i] =modeData;
     });
     return mode;
+}
+
+//Scale
+export const Scale = {
+    diatonic: {displayName:"Diatonic Scale", pattern: [0, 2, 4, 5, 7, 9, 11], mode:[]}, // A 7 note pattern
+    pentatonic: {displayName:"Pentatonic Scale", pattern: [0, 3, 5, 7, 10], mode:[]}, //A 5 note pattern;
+};
+
+
+Scale.diatonic.mode = createMode(Scale.diatonic.pattern, ["Major Scale",  "","","","", "Minor Scale"]);
+Scale.pentatonic.mode = createMode(Scale.pentatonic.pattern, ["Minor Pentatonic Scale", "Major Pentatonic Scale"]);
+
+export function makeScale(root, scale = "diatonic", mode = 0){
+    return Scale[scale].mode[mode].pattern.map(step=>{
+        return (root+step)%12;
+    });
 }
 
 export function reorientPattern(notes, step){
@@ -104,13 +120,30 @@ export function notePattern(rawPattern = [], type="steps"){//@type - steps, tone
 export const notePatternType = ["steps", "tones", "numbers", "gaps"];
 
 
-export function convertToNotes( pattern, type = "Ascending" ){ //type = "Ascending" or "Descending"
-    const patternCopy = pattern.map(x=>x+1); //This is to ensure that pattern starts at 1 not zero;
-
+export function convertToNotes( pattern, type = "sharp" ){ //type = "sharp" or "flat"
+    const patternCopy = pattern.map(loc=>{
+        //-- This will get the note data of either sharps and flat
+        let noteName = standardNotes.onlySharp[loc];
+        if(type == "flat"){
+            noteName = standardNotes.onlyFlat[loc];
+        }
+        //--
+        //-- This will check if the data contains sharp or flat
+        noteName = noteName.split("_");
+        if(noteName.length > 1){
+            return noteName[0] + (  noteName[1] == "sharp" ? sharps[2] : flats[1]  ) ;
+        }
+        //If not then return just the whole note without accidental
+        return noteName[0];
+    })
+    return patternCopy;
 }
 
-const standardNotesSharps = [];
+export const standardNotes = {
+    onlySharp:['A', 'A_sharp', 'B', 'C', 'C_sharp', 'D', 'D_sharp', 'E', 'F', 'F_sharp', 'G', 'G_sharp'],
+    onlyFlat: ['A', 'B_flat', 'B', 'C', 'D_flat', 'D', 'E_flat', 'E', 'F', 'G_flat', 'G', 'A_flat'],
+}
 
 
-const sharp = ['#','#','♯','sharp','_#','_#','_♯','_sharp'];
-const flat = ['b','♭','flat','_b','_♭','_flat'];
+const sharps = ['#','#','♯','sharp','_#','_#','_♯','_sharp'];
+const flats = ['b','♭','flat','_b','_♭','_flat'];

@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import { createMode } from "@/Elements/Instruments/Components.jsx";
-import { notePatternType } from "../Components";
+import { makeScale, notePatternType, standardNotes } from "../Components";
 
 //InterfaceDefault
 export const InterfaceDefault  = {
@@ -15,7 +15,8 @@ export const InterfaceDefault  = {
     mode: "notSelected", //This is a number once used
     pattern: notePatternType[0],
         patternIndex: 0,
-    interfaceType: "default", //"write or default" default use the interactivity of the page while write will freeze the current state in order for them to receive the click data on screen
+    interfaceType: "Default", //"Write or Default" default use the interactivity of the page while write will freeze the current state in order for them to receive the click data on screen
+        isWritable: false, //By default it is set to false, when this is false then interfaceType will always be "default"
 };
 
 //InterfaceDispatcher
@@ -33,7 +34,6 @@ export function InterfaceDispatcher(rawState, action){
                 tune[index] = sanitizeValue ;
             break;
         }
-        console.log(tune);
         state.tune = tune;
     }
 
@@ -84,15 +84,32 @@ export function InterfaceDispatcher(rawState, action){
         state.notePick = notePick;
     }
 
+    if(action?.noteFlow){
+        switch(action.noteFlow){
+            case "toggle":
+                state.noteFlow = state.noteFlow == "Ascending" ? "Descending" : "Ascending";
+                state.noteSequence = state.noteFlow == "Ascending" ? standardNotes.onlySharp : standardNotes.onlyFlat;
+            break;
+        }
+    }
+
 
     if(action?.scale){
         switch(action.scale){
             case "update":
+                if(action.scale === state.scale)
+                    break;
                 state.scale = action.val;
-                if(state.scale !== "NotSelected")
+                if(state.scale !== "notSelected")
                     state.mode = 0;
-                else
-                    state.mode = "NotSelected";
+                else{
+                    state.mode = "notSelected";
+                    break;
+                }
+
+                if(state.notePick.length < 1)
+                    break;
+                state.notePick =  makeScale(state.notePick[0], state.scale, state.mode);
             break;
         }
     }
@@ -102,6 +119,10 @@ export function InterfaceDispatcher(rawState, action){
         switch(action.mode){
             case "update":
                 state.mode = action.val;
+
+                if(state.notePick.length < 1 || state.mode === "notSelected")
+                    break;
+                state.notePick =  makeScale(state.notePick[0], state.scale, state.mode);
             break;
         }
     }
@@ -116,6 +137,18 @@ export function InterfaceDispatcher(rawState, action){
         }
     }
 
+
+    if(action?.interfaceType){
+        switch(action.interfaceType){
+            case "writable":
+                state.isWritable = true;
+            break;
+            case "toggle":
+                state.interfaceType = state.interfaceType == "Default" ? "Write" : "Default";
+            break;
+        }
+    }
+
     return state;
 }
 
@@ -126,14 +159,6 @@ export const ElectricGuitarInterfaceStateContext = createContext();
 export const standardTune = [7, 2, 10, 5, 0, 7]; //Starting from the thinnest string
 export const standardRegister = [52, 47, 43, 38, 33, 28]; //Same as above but this is used for overall octave of the string
 
-//Scale
-export const Scale = {
-    diatonic: {displayName:"Diatonic Scale", pattern: [0, 2, 4, 5, 7, 9, 11], mode:[]}, // A 7 note pattern
-    pentatonic: {displayName:"Pentatonic Scale", pattern: [0, 3, 5, 7, 10], mode:[]}, //A 5 note pattern;
-};
 
-
-Scale.diatonic.mode = createMode(Scale.diatonic.pattern, ["Major Scale", "Minor Scale"]);
-Scale.pentatonic.mode = createMode(Scale.pentatonic.pattern, ["Minor Pentatonic Scale", "Major Pentatonic Scale"]);
 
 

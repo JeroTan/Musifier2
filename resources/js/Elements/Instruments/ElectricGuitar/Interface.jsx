@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { ElectricGuitarInterfaceStateContext, InterfaceDefault, InterfaceDispatcher } from "./Structure";
 import { Fretboard } from "./Fretboard";
 import { Interactable } from "./Interactable";
@@ -11,6 +11,12 @@ export default function(props){
 
     //Reduced the Structure Data
     const [interfaceState, interfaceCast] = useReducer(InterfaceDispatcher, InterfaceDefault);
+
+    //UseEffect
+    useEffect(()=>{
+        if(isWritable === true)
+        interfaceCast({interfaceType:"writable"});
+    }, []);
 
     return <>
     <ElectricGuitarInterfaceStateContext.Provider value={[interfaceState, interfaceCast]}>
