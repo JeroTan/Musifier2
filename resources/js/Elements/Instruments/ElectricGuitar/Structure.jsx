@@ -1,5 +1,6 @@
 import { createContext } from "react";
 import { createMode } from "@/Elements/Instruments/Components.jsx";
+import { notePatternType } from "../Components";
 
 //InterfaceDefault
 export const InterfaceDefault  = {
@@ -10,8 +11,10 @@ export const InterfaceDefault  = {
 
     //This one is for options only to change/manipulate the data above
     noteFlow: "Ascending", //Descending or Ascending
-    scale: "NotSelected", //Key Name of the Scale
-    mode: "NotSelected", //This is a number once used
+    scale: "notSelected", //Key Name of the Scale
+    mode: "notSelected", //This is a number once used
+    pattern: notePatternType[0],
+        patternIndex: 0,
     interfaceType: "default", //"write or default" default use the interactivity of the page while write will freeze the current state in order for them to receive the click data on screen
 };
 
@@ -61,23 +64,56 @@ export function InterfaceDispatcher(rawState, action){
                 const rootNote = notePick[0];
                 notePick.sort((next, current)=>{
                     //the rootNote must be always first regardless;
-                    //Also Check the noteFlow if descending or ascending
-                    if(state.noteFlow == "Ascending"){
-                        //we need the root to be at zero since it is first;
-                        next = next - rootNote;
-                        current = current - rootNote;
-                    }else{
-                        //We need the root to be at 12(max) so that it will treat still as first when we reverse the sort
-                        next = next + (12-rootNote);
-                        current = current + (12-rootNote);
-                    }
+
+                    //we need the root to be at zero since it is first;
+                    next = next - rootNote;
+                    current = current - rootNote;
+                    // if(state.noteFlow !== "Ascending"){//Also Check the noteFlow if descending or ascending
+                    //     //We need the root to be at 12(max) so that it will treat still as first when we reverse the sort
+                    //     next = next + (12-rootNote);
+                    //     current = current + (12-rootNote);
+                    // }
+
                     next =  (((next)%12)+12)%12;
                     current = (((current)%12)+12)%12;
-                    return  state.noteFlow == "Ascending"? next - current : current - next;
+                    // return  state.noteFlow == "Ascending"? next - current : current - next;
+                    return next - current;
                 });
             break;
         }
         state.notePick = notePick;
+    }
+
+
+    if(action?.scale){
+        switch(action.scale){
+            case "update":
+                state.scale = action.val;
+                if(state.scale !== "NotSelected")
+                    state.mode = 0;
+                else
+                    state.mode = "NotSelected";
+            break;
+        }
+    }
+
+
+    if(action?.mode){
+        switch(action.mode){
+            case "update":
+                state.mode = action.val;
+            break;
+        }
+    }
+
+    if(action?.pattern){
+        switch(action.pattern){
+            case "toggle":{
+                state.patternIndex = (state.patternIndex+1) % notePatternType.length;
+                state.pattern =  notePatternType[state.patternIndex];
+                break;
+            }
+        }
     }
 
     return state;

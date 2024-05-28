@@ -83,10 +83,10 @@ function NoteButton(props){
             noteFrameData.fill = '#EF4444';
         break;
         case 'o0':
-            noteFrameData.fill = '#DCBABA';
+            noteFrameData.fill = '#938787';
         break;
         case 'o1':
-            noteFrameData.fill = '#78EA83';
+            noteFrameData.fill = '#709C74';
         break;
         case 'o2':
             noteFrameData.fill = '#4D7C0F';

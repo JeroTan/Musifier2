@@ -2,33 +2,60 @@ import { useContext, useState } from "react";
 import { InputBar } from "@/Pages/Components"
 import { ElectricGuitarInterfaceStateContext, Scale } from "./Structure";
 import { DropDown, DropDownItem } from "../../../Pages/Components";
+import { notePattern } from "../Components";
+import Icon from "../../../Utilities/Icon";
 
 export function TopOptions(){
     //Global
     const [ interfaceState, interfaceCast ] = useContext(ElectricGuitarInterfaceStateContext);
     const scaleState = interfaceState.scale;
+    const modeState = interfaceState.mode;
+    const { notePick, pattern } = interfaceState;
 
     //Functionality
+    function updateScale(e){
+        const { value } = e.target;
+        interfaceCast({scale:"update", val:value});
+    }
+    function updateMode(e){
+        const { value } = e.target;
+        interfaceCast({mode:"update", val:value});
+    }
+    function togglePattern(e){
+        interfaceCast({pattern:"toggle"});
+    }
 
     return <>
     <header className=" w-full flex flex-wrap gap-5">
         <nav className="shrink-0">
             <label className=" my-text text-sky-300">Scale: </label>
-            <DropDown set={scaleState}>
+            <DropDown set={scaleState} onChange={updateScale}>
                 { Object.keys(Scale).map(key=>{
                     const data = Scale[key];
                     return <DropDownItem key={key} label={data.displayName} value={key} />
                 }) }
-                <DropDownItem label="Not Selected" value="NotSelected" />
+                <DropDownItem label="Not Selected" value="notSelected" />
             </DropDown>
         </nav>
         <nav className="shrink-0">
             <label className=" my-text text-sky-300">Mode: </label>
-            <InputBar name="mode" />
+            <DropDown set={modeState} onChange={updateMode}>
+                { Scale[scaleState] === undefined ? "" : Scale[scaleState].mode.map(data=>{
+                    return <DropDownItem key={data.key} label={data.displayName} value={data.key} />
+                }) }
+                <DropDownItem label="Not Selected" value="NotSelected" />
+            </DropDown>
         </nav>
-        <nav className="shrink-0">
+        <nav className="shrink-0 relative">
             <label className=" my-text text-sky-300">Pattern: </label>
-            <InputBar name="pattern" disabled />
+            {notePick.length > 0 && <>
+                <Icon name="refresh"
+                    inClass={"fill-slate-500 group-hover:fill-slate-400"}
+                    outClass={"w-5 h-5 absolute cursor-pointer group z-10"}
+                    style={{top:"7px", left:"70px"}} onClick={togglePattern}
+                />
+            </>}
+            <InputBar name="pattern" style={{ paddingLeft: "30px", width:"265px", flexBasis:"unset"}} disabled set={ notePattern(notePick, pattern).join(", ") } />
         </nav>
         <nav className="shrink-0">
             <label className=" my-text text-sky-300">Notes: </label>
@@ -37,8 +64,8 @@ export function TopOptions(){
         <nav className="shrink-0 flex gap-2">
             <label className=" my-text text-sky-300">Octave/Register: </label>
             <OctaveLabel circle={false} text="Root" color="#EF4444" />
-            <OctaveLabel text={0} color="#DCBABA" />
-            <OctaveLabel text={1} color="#78EA83" />
+            <OctaveLabel text={0} color="#938787" />
+            <OctaveLabel text={1} color="#709C74" />
             <OctaveLabel text={2} color="#4D7C0F" />
             <OctaveLabel text={3} color="#0F766E" />
             <OctaveLabel text={4} color="#1D4ED8" />
@@ -54,8 +81,8 @@ export function TopOptions(){
 
 function OctaveLabel({circle = true, color="blue", text}){
     return <>
-    <div className={` rounded-full ${circle ? "aspect-square": "px-2"} h-8 flex justify-center items-center`} style={{backgroundColor: color}} >
-        <span className=" my-text text-sky-50 mix-blend-difference">{text}</span>
+    <div className={` rounded-full ${circle ? "aspect-square": "px-2"} h-7 flex justify-center items-center`} style={{backgroundColor: color}} >
+        <span className=" text-sky-50 ">{text}</span>
     </div>
     </>
 }
