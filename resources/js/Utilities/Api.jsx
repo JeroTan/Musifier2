@@ -1,8 +1,8 @@
-import { ApiRequestPlate, Fetcher, Resolve } from "../helpers/API";
+import { HttpPlate, Fetcher, Resolve } from "../helpers/Http";
 import { AuthToken, CsrfToken } from "../helpers/Auth";
 
 const endPoint = "http://localhost:8000/";
-const api = new ApiRequestPlate(endPoint+"api/v1/");
+const api = new HttpPlate(endPoint+"api/v1/");
 
 
 //Defining Token Creator Here
@@ -12,7 +12,7 @@ export const csrfToken = new CsrfToken;
 
 //**>> Authentication */
 export function ApiRequestCSRF(){
-    const request = (new ApiRequestPlate(endPoint)).reset().url('sanctum/csrf-cookie/').get().request();
+    const request = (new HttpPlate(endPoint)).reset().url('sanctum/csrf-cookie/').get().request();
     return new Promise((resolve, reject)=>{
         request.then(x=>{
             if(x.status == 204)
@@ -26,7 +26,7 @@ export function ApiRequestCSRF(){
 const apiVerifySignupDataFetcher = (new Fetcher).withDebounce(250);
 export function ApiVerifySignupData(data){
     const apiRequest = ()=>api.reset().url('signupVerify').data(data).post().request();
-    const apiFetched = apiVerifySignupDataFetcher.newApi(apiRequest).fetch();
+    const apiFetched = apiVerifySignupDataFetcher.newRequest(apiRequest).fetch();
     const resolver = new Resolve(apiFetched);
     return resolver;
 }
