@@ -2,15 +2,16 @@ import { useContext, useState } from "react";
 import { InputBar } from "@/Pages/Components"
 import { ElectricGuitarInterfaceStateContext } from "./Structure";
 import { DropDown, DropDownItem } from "../../../Pages/Components";
-import { convertToNotes, notePattern, Scale } from "../Components";
+import { convertPatternToNotes, convertToNotes, notePattern, Scale } from "../Components";
 import Icon from "../../../Utilities/Icon";
 
 export function TopOptions(){
     //Global
     const [ interfaceState, interfaceCast ] = useContext(ElectricGuitarInterfaceStateContext);
+    const { notePick, noteFlow, pattern, interfaceType, isWritable, currentNote } = interfaceState;
     const scaleState = interfaceState.scale;
     const modeState = interfaceState.mode;
-    const { notePick, noteFlow, pattern, interfaceType, isWritable } = interfaceState;
+
 
     //Functionality
     function updateScale(e){
@@ -49,7 +50,7 @@ export function TopOptions(){
                 { Scale[scaleState] === undefined ? "" : Scale[scaleState].mode.map(data=>{
                     return <DropDownItem key={data.key} label={data.displayName} value={data.key} />
                 }) }
-                <DropDownItem label="Not Selected" value="NotSelected" />
+                <DropDownItem label="Not Selected" value="notSelected" />
             </DropDown>
         </nav>
         <nav className="shrink-0 relative">
@@ -65,7 +66,7 @@ export function TopOptions(){
         </nav>
         <nav className="shrink-0">
             <label className=" my-text text-sky-300">Notes: </label>
-            <InputBar name="notes" disabled style={{ width:"265px", flexBasis:"unset"}} set={convertToNotes(notePick, noteFlow=="Ascending"?"sharp":"flat").join(", ")} />
+            <InputBar name="notes" disabled style={{ width:"265px", flexBasis:"unset"}} set={convertPatternToNotes(notePick, noteFlow=="Ascending"?"sharp":"flat").join(", ")} />
         </nav>
         <nav className="shrink-0 flex gap-2">
             <label className=" my-text text-sky-300">Flow: </label>
@@ -97,6 +98,17 @@ export function TopOptions(){
             <OctaveLabel text={7} color="#630000" />
             <OctaveLabel text={8} color="#3D0808" />
         </nav>
+
+        <nav className="shrink-0 flex gap-2">
+            <label className=" my-text text-sky-300 break-keep" style={{whiteSpace:"nowrap"}}>Current Note: </label>
+            {currentNote === undefined ? <>
+                <InputBar name="currentNote" disabled style={{ width:"103px"}} set={"No Selected"} />
+                </>:<>
+                    <OctaveLabel text={ convertToNotes(currentNote.note, noteFlow=="Ascending"?"sharp":"flat") } color={ currentNote.color } />
+                </>
+            }
+
+        </nav>
     </header>
     </>
 }
@@ -124,7 +136,7 @@ export function SideOptions(){
 
     return <>
         <ul className="mt-3 mr-2">
-            <li className="mb-1">
+            <li className="xl:mb-1 md:mb-0 mb-[-10px]">
                 <span className=" my-text text-sky-300">Tune</span>
             </li>
             <TuneBox index={0} onInput={changeTuneSet} />
@@ -140,8 +152,8 @@ export function SideOptions(){
 function TuneBox({index, onInput=()=>true}){
 
     return <>
-    <li className="mb-[8px]">
-        <InputBar name={"tune_"+index} className=" w-14 " min="-24" max="24" type="number" set={0} onInput={onInput} />
+    <li className="xl:mb-[8px] lg:mb-[9px] md:mb-[6px] mb-[3px]">
+        <InputBar name={"tune_"+index} className=" w-14 xl:h-auto lg:h-8 md:h-6 h-6" min="-24" max="24" type="number" set={0} onInput={onInput} />
     </li>
     </>
 }

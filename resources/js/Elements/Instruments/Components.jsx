@@ -120,23 +120,21 @@ export function notePattern(rawPattern = [], type="steps"){//@type - steps, tone
 export const notePatternType = ["steps", "tones", "numbers", "gaps"];
 
 
-export function convertToNotes( pattern, type = "sharp" ){ //type = "sharp" or "flat"
+export function convertPatternToNotes( pattern, type = "sharp" ){ //type = "sharp" or "flat" Pattern Accepts only array of note index
     const patternCopy = pattern.map(loc=>{
-        //-- This will get the note data of either sharps and flat
-        let noteName = standardNotes.onlySharp[loc];
-        if(type == "flat"){
-            noteName = standardNotes.onlyFlat[loc];
-        }
-        //--
-        //-- This will check if the data contains sharp or flat
-        noteName = noteName.split("_");
-        if(noteName.length > 1){
-            return noteName[0] + (  noteName[1] == "sharp" ? sharps[2] : flats[1]  ) ;
-        }
-        //If not then return just the whole note without accidental
-        return noteName[0];
+        return convertToNotes(loc, type);
     })
     return patternCopy;
+}
+
+export function convertToNotes(noteIndex, type = "sharp"){
+    //-- This will get the note data of either sharps and flat
+    const noteName = type == "sharp" ? standardNotes.onlySharp[noteIndex] : standardNotes.onlyFlat[noteIndex];
+    //--
+    //-- This will check if the data contains sharp or flat
+    const parseNoteName = noteName.split("_");
+    return parseNoteName[0] + (parseNoteName.length>1? (parseNoteName[1]=="sharp"?sharps[2]:flats[1]) : "")
+    //--
 }
 
 export const standardNotes = {

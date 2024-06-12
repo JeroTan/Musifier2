@@ -7,7 +7,7 @@ import { SideOptions, TopOptions } from "./HeaderOption";
 //This will be the main export with lazy loading
 export default function(props){
     //Parent Config
-    const { isWritable } = props;
+    const { isWritable, getCurrentNoteData } = props; //@ isWritable == Boolean, getCurrentNoteData == currentNote
 
     //Reduced the Structure Data
     const [interfaceState, interfaceCast] = useReducer(InterfaceDispatcher, InterfaceDefault);
@@ -17,6 +17,12 @@ export default function(props){
         if(isWritable === true)
         interfaceCast({interfaceType:"writable"});
     }, []);
+    if(getCurrentNoteData !== undefined && typeof getCurrentNoteData === "function"){
+        useEffect(()=>{
+            getCurrentNoteData(interfaceState.currentNote);
+        }, [interfaceState.currentNote]);
+    }
+
 
     return <>
     <ElectricGuitarInterfaceStateContext.Provider value={[interfaceState, interfaceCast]}>

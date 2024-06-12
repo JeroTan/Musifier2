@@ -1,26 +1,27 @@
 import { useState, useRef, useCallback, useContext, useMemo } from "react"
 import { floorDecimal } from "@/helpers/Math";
-import { ElectricGuitarInterfaceStateContext, standardTune, standardRegister } from "./Structure";
+import { ElectricGuitarInterfaceStateContext, standardTune, standardRegister, noteColor } from "./Structure";
+import { standardNotes } from "../Components";
 
 export function Interactable(props){
     //Global
     const [ interfaceState, interfaceCast] = useContext(ElectricGuitarInterfaceStateContext);
     const {
         tune, //default: [0,0,0,0,0,0]; This will be use to swap the current standard register starting from thinnest string
-        noteSequence, //default: ['A', 'A_sharp', 'B', 'C', 'C_sharp', 'D', 'D_sharp', 'E', 'F', 'F_sharp', 'G', 'G_sharp']; This will be use to swap the current standard register starting from thinnest string
         notePick, //[] List notes that are selected
-        noteFlow
+        noteFlow, //Either Ascending or Descending, In which will be use to reference what note should be use.
     } = interfaceState;
 
 
     // Functionality
-    const clickNote = useCallback((clickedNote)=>{//This is a toggle and also a trigger for parent states
+    const clickNote = useCallback((clickedNote, color = "#000000")=>{//This is a toggle and also a trigger for parent states
         return e=>{
             interfaceCast({notePick:"click", val:clickedNote});
+            interfaceCast({currentNote:"update", val:{note:clickedNote, color}})
         }
-    }, [notePick]);
+    }, []);
     //register is the current octave; tone is the note; notePick checks  whether the current selected tone is existed or picked in the notePick Array
-    const transformToButtonColor = useCallback((register, tone, notePick)=>{
+    const transformNoteState = useCallback((register, tone, notePick)=>{
         const pickIndex = notePick.indexOf(tone);
         if(pickIndex === 0) //If note is pick first;
             return `root`;
@@ -32,7 +33,6 @@ export function Interactable(props){
 
     //Generate Button Map
     const toneMap = useMemo(()=>{
-        const label = [];
         const button = [];
 
         for(let i = 0; i <= 24; i++){ //posX
@@ -45,74 +45,38 @@ export function Interactable(props){
                 const thisTone = (standardTune[j]+ (tuneToNote) +i)%12;
                 const thisRegister = floorDecimal( (tune[j]+standardRegister[j]+i)/12 );
                 // console.log(`x:${i},y:${j}`, thisRegister );
-                const noteButtonColor = transformToButtonColor(thisRegister, thisTone, notePick);
-                const noteLabelKeyName = noteSequence[ thisTone ]; //Using its index to track the label key of the note Label
+                const noteState = transformNoteState(thisRegister, thisTone, notePick);
+                const noteLabelKeyName = noteFlow == "Ascending" ? standardNotes.onlySharp[thisTone] : standardNotes.onlyFlat[thisTone]; //UsingItsIndexToTrackTheLabelKeyOfTheStandardNote
+                const noteStateWhenClick = transformNoteState(thisRegister, thisTone, [-1, thisTone]) //This is for current click purposes
 
                 //Insert it in the mapper
                 button[button.length] = (
-                    <NoteButton name={ noteButtonColor } key={`btn_${i}_${j}`} posX={posX+14.5} posY={posY+14.5} onClick={clickNote(thisTone)}/>
+                    <NoteButton name={ noteState } key={`btn_${i}_${j}`} posX={posX+14.5} posY={posY+14.5} onClick={clickNote(thisTone, noteColor[noteStateWhenClick])} >
+                        <NoteLabel name={ noteLabelKeyName } key={`lbl_${i}_${j}`} posX={posX} posY={posY} className={`fill-slate-300 opacity-[0.9]`}/>
+                    </NoteButton>
                 )
 
-                label[label.length] = (
-                    <NoteLabel name={ noteLabelKeyName } key={`lbl_${i}_${j}`} posX={posX} posY={posY} className={`fill-slate-300 opacity-[0.9]`}/>
-                )
             }
         }
 
         //return the mapper
-        return {label: label, button: button};
-    }, [tune, noteSequence, notePick, noteFlow]);
+        return button;
+    }, [tune, notePick, noteFlow]);
 
     return <>
-        { toneMap.button }
-        { toneMap.label }
+        { toneMap }
     </>
 }
 
 function NoteButton(props){
-    const {name, posX, posY, color = '#000000', className = '', ...gAttributes} = props;
+    const {name, posX, posY, color = '#000000', className = '', children, ...gAttributes} = props;
     const noteFrameData = {
         cx:posX,
         cy:posY,
         r:"14.5",
-        fill: color,
+        fill: name ? noteColor[name] :color ,
         className: className,
-    }
-    switch(name){
-        case 'root':
-            noteFrameData.fill = '#EF4444';
-        break;
-        case 'o0':
-            noteFrameData.fill = '#938787';
-        break;
-        case 'o1':
-            noteFrameData.fill = '#709C74';
-        break;
-        case 'o2':
-            noteFrameData.fill = '#4D7C0F';
-        break;
-        case 'o3':
-            noteFrameData.fill = '#0F766E';
-        break;
-        case 'o4':
-            noteFrameData.fill = '#1D4ED8';
-        break;
-        case 'o5':
-            noteFrameData.fill = '#6D28D9';
-        break;
-        case 'o6':
-            noteFrameData.fill = '#BE185D';
-        break;
-        case 'o7':
-            noteFrameData.fill = '#630000';
-        break;
-        case 'o8':
-            noteFrameData.fill = '#3D0808';
-        break;
-        case 'none':
-            noteFrameData.fill = '#000000';
-            noteFrameData.fillOpacity = 0.0
-        break;
+        fillOpacity: name === undefined || name === "none" ? 0.0 : 1.0
     }
 
     //Finally Construct the Note Graphics
@@ -121,6 +85,7 @@ function NoteButton(props){
     return <>
     <g cursor={'pointer'} {...gAttributes}>
         {noteFrame}
+        {children}
     </g>
     </>
 }

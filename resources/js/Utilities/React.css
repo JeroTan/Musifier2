@@ -100,6 +100,9 @@ body::-webkit-scrollbar-thumb { /* The slider */
 .my-btn{
     @apply cursor-pointer rounded-lg  hover:scale-105 bg-gray-300 hover:bg-gray-500 text-slate-800 font-semibold focus:outline-sky-100 focus:outline focus:outline-[1px];
 }
+.my-btn-big{
+    @apply cursor-pointer rounded-lg  hover:scale-105 bg-gray-300 hover:bg-gray-500 text-slate-800 font-light md:text-3xl text-xl focus:outline-sky-100 focus:outline focus:outline-[1px];
+}
 .my-btn-blue{
     @apply cursor-pointer rounded-lg  hover:scale-105 bg-sky-300 hover:bg-sky-400 text-slate-800 font-semibold focus:outline-sky-100 focus:outline focus:outline-[1px];
 }

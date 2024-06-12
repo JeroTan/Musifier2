@@ -7,10 +7,10 @@ export function LoadingInstrument(){
     </>
 }
 export function InstrumentContainer(props){
-    const {children, className, noMargin=false, ...attributes} = props;
+    const {children, className, ...attributes} = props;
 
     return <>
-    <div className={`w-full ${!noMargin?"pt-16":""} relative flex justify-center`}>
+    <div className={`w-full relative flex justify-center`}>
         <main style={{flexBasis: "110rem", overflowY:"auto"}} className={` custom-scroll-horizontal ${className||""}`} {...attributes}>
             {children}
         </main>
