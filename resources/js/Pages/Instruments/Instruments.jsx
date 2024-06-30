@@ -3,15 +3,16 @@ import PagePlate from "../../PagePlate/PagePlate";
 import Icon from "../../Utilities/Icon";
 import { ChangeView, Container, FilterHeader, InputBar, InputBox, ListingEmpty, ListingItem, ListingLoading, ListingView, Search, Sorter } from "../Components";
 import { ApiGetInstrument } from "../../Utilities/Api";
-import { Cacher, Conditioner, Debouncer, onlyAlphaString } from "../../helpers/ParseData";
+import { Conditioner, Debouncer, onlyAlphaString } from "../../helpers/ParseData";
 import { copyChildren } from "../../Utilities/ReactParse";
 import { Outlet } from "react-router-dom";
+import { Cacher } from "../../helpers/Storage";
 
 
 //Outside Logic
 const searchDebouncer = new Debouncer(250);
 const sortDebouncer = new Debouncer(200);
-const cacheInstrument = new Cacher("instrument");
+const cacheInstrument = new Cacher("instrument.data");
 
 export function InstrumentIndex(){
     return <>
@@ -104,17 +105,17 @@ export function LogicView(){
 
         //Cache
         if(viewState.instruments === undefined){
-            cacheInstrument.cExist("data").cDoWhenExist(x=>{
-                viewCast({ instruments:"update", val:JSON.parse(x) });
-            });
+            cacheInstrument.retrieve().success(data=>{
+                viewCast({ instruments:"update", val:data });
+            })
+            return
         }
 
         viewCast({loading:"instruments",val:true});
         ApiGetInstrument(query).s200(data=>{
             viewCast({loading:"instruments",val:false});
-            cacheInstrument.cExist("data", data).cStore().cDoWhenNotExist(x=>{
-                viewCast({instruments:"update", val:data});
-            });
+            cacheInstrument.receive(data)
+            viewCast({instruments:"update", val:data});
 
         });
     }

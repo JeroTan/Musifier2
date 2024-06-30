@@ -4,7 +4,7 @@ import { Form, MainPage } from "./Components";
 import { InputBox } from "../Components";
 import { useContext, useState } from "react";
 import { ApiRequestCSRF, ApiSignUp, ApiVerifySignupData, authToken } from "../../Utilities/Api";
-import { Data, Error, laravelValErrToStr, objToString } from "../../helpers/ParseData";
+import { DataDispatch, ErrorDispatch, laravelValErrToStr, objToString } from "../../helpers/ParseData";
 import { Pop } from "../../helpers/Pop";
 import { GlobalStateContext } from "../../Utilities/GlobalState";
 import { Notif } from "../../helpers/Notif";
@@ -35,8 +35,8 @@ function ThisForm(){
     }
     const [ value, valueSet] = useState(fields);
     const [ error, errorSet ] = useState(fields);
-    const val = new Data(valueSet);
-    const err = new Error(errorSet);
+    const val = new DataDispatch(valueSet);
+    const err = new ErrorDispatch(errorSet);
 
 
     //Functionality
